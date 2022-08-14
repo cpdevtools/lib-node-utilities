@@ -16,7 +16,7 @@ jobs:
 
       - uses: fregante/setup-git-user@v1
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: "${{ env.NODE_VERSION }}"
           registry-url: https://npm.pkg.github.com/
@@ -72,6 +72,18 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           NODE_AUTH_TOKEN: ${{ github.token }}
         run: pnpm run release
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          registry-url: "https://registry.npmjs.org"
+          scope: ${{ github.repository_owner }}
+
+      - name: Publish Libraries to Npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN  }}
+
+        run: pnpm run npm:release
 
       - name: Create tag
         id: tag_version
