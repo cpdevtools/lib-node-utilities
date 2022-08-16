@@ -1,7 +1,7 @@
 import os from "os";
 import { promisified as regEdit } from "regedit";
 import semver from "semver";
-import { run } from "./cmd";
+import { exec, run } from "./cmd";
 import { translateWindowsPath } from "./wsl";
 
 export interface AppxPackage {
@@ -57,16 +57,9 @@ export const isWin10 = !isWindows ? false : windowsVersion?.major === 10 && wind
 export const isWin11 = !isWindows ? false : windowsVersion?.major === 10 && windowsVersion?.patch === 22000;
 
 export async function runOnceAfterRestart(id: string, script: string) {
-  await regEdit.putValue({
-    "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce": {
-      [id]: {
-        value: script,
-        type: "REG_SZ",
-      },
-    },
-  });
+  await exec(`reg.exe add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce" /v "${id}" /d "${script}" /f`);
 }
 
 export async function removeRunOnceAfterRestart(id: string) {
-  await (regEdit as any).deleteValue(`HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\\${id}`);
+  await exec(`reg.exe delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce" /v "${id}" /f`);
 }
