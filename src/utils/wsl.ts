@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import semVer from "semver";
 import { exec, run } from "./cmd";
 import { isWin10, isWindows } from "./windows";
@@ -50,11 +51,15 @@ export async function installWSL() {
 export async function updateWSL() {
   if (isWindows) {
     if (isWin10) {
+      console.info(chalk.gray(`Applying wsl update for windows 10...`));
       await exec(`curl --ssl https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi > uwsl.msi && uwsl.msi`);
     }
-    await exec(`wsl --update`);
-    await exec(`wsl --shutdown`);
-    await exec(`wsl --set-default-version 2 > nul 2>&1`);
+    console.info(chalk.gray(`Updating wsl...`));
+    await run(`wsl --update`);
+    console.info(chalk.gray(`Restarting wsl...`));
+    await run(`wsl --shutdown`);
+    console.info(chalk.gray(`Setting wsl 2 as default`));
+    await run(`wsl --set-default-version 2 > nul 2>&1`);
   }
 }
 
