@@ -1,3 +1,6 @@
+import os from "os";
+import { promisified as regEdit } from "regedit";
+import semver from "semver";
 import { run } from "./cmd";
 import { translateWindowsPath } from "./wsl";
 
@@ -44,4 +47,26 @@ export async function loadAppxPackage(appxPackageName: string): Promise<AppxPack
 export async function locateInstallationPath(appxPackageName: string): Promise<string | undefined> {
   const pkg = await loadAppxPackage(appxPackageName);
   return pkg?.InstallLocation ? translateWindowsPath(pkg?.InstallLocation) : undefined;
+}
+
+export const isWindows = os.platform() === "win32";
+export const windowsVer = isWindows ? os.release() : null;
+export const windowsVersion = isWindows ? semver.parse(windowsVer) : null;
+
+export const isWin10 = !isWindows ? false : windowsVersion?.major === 10 && windowsVersion?.patch !== 22000;
+export const isWin11 = !isWindows ? false : windowsVersion?.major === 10 && windowsVersion?.patch === 22000;
+
+export async function runOnceAfterRestart(id: string, script: string) {
+  await regEdit.putValue({
+    "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce": {
+      [id]: {
+        value: script,
+        type: "REG_SZ",
+      },
+    },
+  });
+}
+
+export async function removeRunOnceAfterRestart(id: string) {
+  await (regEdit as any).deleteValue(`HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\\${id}`);
 }

@@ -1,5 +1,6 @@
 export * from "./cmd";
 export * from "./docker";
+export * from "./download";
 export * from "./env";
 export * from "./git";
 export * from "./github";

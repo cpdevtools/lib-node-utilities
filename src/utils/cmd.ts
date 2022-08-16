@@ -21,6 +21,7 @@ export function run(cmd: string, { cwd }: { cwd?: string } = {}): Promise<string
       const child = spawn(cmd, { shell: true, stdio: "pipe", cwd, env: process.env });
       child.on("exit", (code) => {
         let d = data.join("");
+
         if (code === 0) {
           res(d);
         } else {
@@ -31,8 +32,9 @@ export function run(cmd: string, { cwd }: { cwd?: string } = {}): Promise<string
         }
       });
 
-      child.stdout?.on("data", (d) => {
-        data.push(d.toString("utf-8"));
+      child.stdout?.on("data", (d: Buffer) => {
+        const str = Buffer.from(d.filter((b) => !!b)).toString("ascii");
+        data.push(str);
       });
     } catch (e) {
       rej(e);
