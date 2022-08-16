@@ -57,9 +57,9 @@ export const isWin10 = !isWindows ? false : windowsVersion?.major === 10 && wind
 export const isWin11 = !isWindows ? false : windowsVersion?.major === 10 && windowsVersion?.patch === 22000;
 
 export async function runOnceAfterRestart(id: string, script: string) {
-  await exec(`reg.exe add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce" /v "${id}" /d "${script}" /f`);
+  await exec(`reg.exe add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce" /v "${id}" /d "${script}" /f`);
 }
 
 export async function removeRunOnceAfterRestart(id: string) {
-  await exec(`reg.exe delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce" /v "${id}" /f`);
+  await exec(`reg.exe delete "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce" /v "${id}" /f`);
 }
