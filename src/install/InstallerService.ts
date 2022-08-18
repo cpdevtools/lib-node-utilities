@@ -4,6 +4,12 @@ import { existsSync } from "fs";
 import Enumerable from "linq";
 import path from "path/posix";
 import { depGraphToArray } from "../utils/dep_graph";
+import { implementsAfterInstallOrUpdate } from "./hooks/AfterInstallOrUpdate";
+import { implementsAfterUninstall } from "./hooks/AfterUninstall";
+import { implementsAfterUpdate } from "./hooks/AfterUpdate";
+import { implementsBeforeInstallOrUpdate } from "./hooks/BeforeInstallOrUpdate";
+import { implementsBeforeUninstall } from "./hooks/BeforeUninstall";
+import { implementsBeforeUpdate } from "./hooks/BeforeUpdate";
 import { Installer, isValidInstaller } from "./installer/Installer";
 import { InstallItem } from "./InstallItem";
 import { detectPlatform } from "./platform/detectPlatform";
@@ -114,15 +120,39 @@ export class InstallerService {
 
   public async installOrUpdateById(id: string): Promise<void> {
     const inst = await this.createInstallerInstance(id);
+    if (implementsBeforeInstallOrUpdate(inst)) {
+      if ((await inst.beforeInstallOrUpdate()) === false) {
+        return;
+      }
+    }
     await inst?.installOrUpdate();
+    if (implementsAfterInstallOrUpdate(inst)) {
+      await inst.afterInstallOrUpdate();
+    }
   }
   public async uninstallById(id: string): Promise<void> {
     const inst = await this.createInstallerInstance(id);
+    if (implementsBeforeUninstall(inst)) {
+      if ((await inst.beforeUninstall()) === false) {
+        return;
+      }
+    }
     await inst?.uninstall();
+    if (implementsAfterUninstall(inst)) {
+      await inst.afterUninstall();
+    }
   }
   public async updateById(id: string): Promise<void> {
     const inst = await this.createInstallerInstance(id);
+    if (implementsBeforeUpdate(inst)) {
+      if ((await inst.beforeUpdate()) === false) {
+        return;
+      }
+    }
     await inst?.update();
+    if (implementsAfterUpdate(inst)) {
+      await inst.afterUpdate();
+    }
   }
 
   private async getListItems(list: InstallItem[]) {
