@@ -1,5 +1,5 @@
 export interface BeforeInstallOrUpdate {
-  beforeInstallOrUpdate(): boolean | undefined | Promise<boolean | undefined>;
+  beforeInstallOrUpdate(): boolean | void | Promise<boolean | void>;
 }
 
 export function implementsBeforeInstallOrUpdate(obj: any): obj is BeforeInstallOrUpdate {

@@ -22,7 +22,7 @@ export async function isInstalledWsl(id: string) {
   }
 }
 
-export async function installWsl(id: string) {
+export async function installWinget(id: string) {
   console.info(chalk.greenBright(`${chalk.cyanBright(id)}: Installing...`));
   console.info();
   const result = await exec(`winget.exe install -e --id ${id}`);
@@ -31,7 +31,7 @@ export async function installWsl(id: string) {
   return result;
 }
 
-export async function uninstallWsl(id: string) {
+export async function uninstallWinget(id: string) {
   console.info(chalk.greenBright(`${chalk.cyanBright(id)}: Uninstalling...`));
   console.info();
   const result = await exec(`winget.exe uninstall -e --id ${id}`);
@@ -40,7 +40,7 @@ export async function uninstallWsl(id: string) {
   return result;
 }
 
-export async function updateWsl(id: string, args?: string) {
+export async function updateWinget(id: string, args?: string) {
   console.info(chalk.blueBright(`${chalk.cyanBright(id)}: Checking for updates...`));
   console.info();
   const result = await exec(`winget.exe upgrade -he --verbose-logs --id ${id}${args ? " " + args : ""}`);
@@ -49,9 +49,9 @@ export async function updateWsl(id: string, args?: string) {
   return result;
 }
 
-export async function updateOrInstallWsl(id: string) {
+export async function updateOrInstallWinget(id: string) {
   if (await isInstalledWsl(id)) {
-    return await updateWsl(id);
+    return await updateWinget(id);
   }
-  return await installWsl(id);
+  return await installWinget(id);
 }

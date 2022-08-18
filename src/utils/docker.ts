@@ -3,7 +3,7 @@ import { existsSync } from "fs";
 import { join } from "path";
 import { exec, run } from "./cmd";
 import { sleep } from "./sleep";
-import { translateWindowsPath } from "./wsl";
+import { readWindowsEnv, translateWindowsPath } from "./wsl";
 
 export async function dockerLogin(url: string, user: string, token: string) {
   console.info(`Attempting to log docker into ${chalk.blueBright(url)} with user ${chalk.yellowBright(user)}`);
@@ -16,11 +16,11 @@ export async function getDockerDesktopPath() {
   return path;
 }
 
-export async function startDockerDesktop(appdata: string) {
+export async function startDockerDesktop() {
   try {
     const cmd = `"${await getDockerDesktopPath()}/Docker Desktop.exe" &`;
     await exec(cmd);
-    const dockerConfigPath = await getDockerConfigPath(appdata);
+    const dockerConfigPath = await getDockerDesktopConfigPath();
     while (!existsSync(dockerConfigPath)) {
       await sleep(500);
     }
@@ -30,22 +30,21 @@ export async function startDockerDesktop(appdata: string) {
   }
 }
 
-export async function restartDocker(appdata: string) {
+export async function restartDockerDesktop() {
   console.info(chalk.gray("Restarting Docker Desktop..."));
-  await killDocker();
-  await startDockerDesktop(appdata);
+  await killDockerDesktop();
+  await startDockerDesktop();
   await waitForDockerInit(true);
 }
 
-export async function getDockerConfigPath(appdata: string) {
-  const appdataPath = (await translateWindowsPath(appdata)).trim();
+export async function getDockerDesktopConfigPath() {
+  const appdataPath = (await translateWindowsPath(await readWindowsEnv("appdata"))).trim();
   return join(appdataPath, "Docker", "settings.json");
 }
 
-export async function killDocker() {
+export async function killDockerDesktop() {
   try {
     return await run('taskkill.exe /IM "Docker Desktop.exe" /F');
-    return true;
   } catch {
     return false;
   }

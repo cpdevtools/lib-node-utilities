@@ -1,3 +1,4 @@
+import { uninstallWinget, updateOrInstallWinget, updateWinget } from "../../utils";
 import { PlatformInstallerBase } from "./PlatformInstallerBase";
 
 export class WingetInstaller extends PlatformInstallerBase {
@@ -7,12 +8,12 @@ export class WingetInstaller extends PlatformInstallerBase {
     })();
   }
   public async installOrUpdate(): Promise<void> {
-    console.log("WingetInstaller.installOrUpdate");
+    await updateOrInstallWinget(this.id);
   }
   public async update(): Promise<void> {
-    console.log("WingetInstaller.update");
+    await updateWinget(this.id);
   }
   public async uninstall(): Promise<void> {
-    console.log("WingetInstaller.uninstall");
+    await uninstallWinget(this.id);
   }
 }

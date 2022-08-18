@@ -1,5 +1,5 @@
 export interface BeforeUninstall {
-  beforeUninstall(): boolean | undefined | Promise<boolean | undefined>;
+  beforeUninstall(): boolean | void | Promise<boolean | void>;
 }
 
 export function implementsBeforeUninstall(obj: any): obj is BeforeUninstall {

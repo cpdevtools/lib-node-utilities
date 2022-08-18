@@ -1,5 +1,5 @@
 export interface BeforeUpdate {
-  beforeUpdate(): boolean | undefined | Promise<boolean | undefined>;
+  beforeUpdate(): boolean | void | Promise<boolean | void>;
 }
 
 export function implementsBeforeUpdate(obj: any): obj is BeforeUpdate {
