@@ -195,21 +195,21 @@ export class InstallerService {
   public async update(list: InstallItem[]): Promise<void> {
     const installs = await this.buildInstallerRunList(list);
     for (const inst of installs) {
-      await inst.update();
+      await this.updateById(inst.id);
     }
   }
 
   public async installOrUpdate(list: InstallItem[]): Promise<void> {
     const installs = await this.buildInstallerRunList(list);
     for (const inst of installs) {
-      await inst.installOrUpdate();
+      await this.installOrUpdateById(inst.id);
     }
   }
 
   public async uninstall(list: InstallItem[]): Promise<void> {
     const installs = (await this.buildInstallerRunList(list)).reverse();
     for (const inst of installs) {
-      await inst.uninstall();
+      await this.uninstallById(inst.id);
     }
   }
 }
