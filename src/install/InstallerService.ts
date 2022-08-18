@@ -118,20 +118,21 @@ export class InstallerService {
     return (await inst?.isInstalled) ?? false;
   }
 
-  public async installOrUpdateById(id: string): Promise<void> {
-    const inst = await this.createInstallerInstance(id);
+  public async installOrUpdateById(idOrInstaller: string | PlatformInstaller): Promise<void> {
+    const inst = typeof idOrInstaller === "string" ? await this.createInstallerInstance(idOrInstaller) : idOrInstaller;
     if (implementsBeforeInstallOrUpdate(inst)) {
       if ((await inst.beforeInstallOrUpdate()) === false) {
         return;
       }
     }
+
     await inst?.installOrUpdate();
     if (implementsAfterInstallOrUpdate(inst)) {
       await inst.afterInstallOrUpdate();
     }
   }
-  public async uninstallById(id: string): Promise<void> {
-    const inst = await this.createInstallerInstance(id);
+  public async uninstallById(idOrInstaller: string | PlatformInstaller): Promise<void> {
+    const inst = typeof idOrInstaller === "string" ? await this.createInstallerInstance(idOrInstaller) : idOrInstaller;
     if (implementsBeforeUninstall(inst)) {
       if ((await inst.beforeUninstall()) === false) {
         return;
@@ -142,8 +143,8 @@ export class InstallerService {
       await inst.afterUninstall();
     }
   }
-  public async updateById(id: string): Promise<void> {
-    const inst = await this.createInstallerInstance(id);
+  public async updateById(idOrInstaller: string | PlatformInstaller): Promise<void> {
+    const inst = typeof idOrInstaller === "string" ? await this.createInstallerInstance(idOrInstaller) : idOrInstaller;
     if (implementsBeforeUpdate(inst)) {
       if ((await inst.beforeUpdate()) === false) {
         return;
@@ -195,21 +196,21 @@ export class InstallerService {
   public async update(list: InstallItem[]): Promise<void> {
     const installs = await this.buildInstallerRunList(list);
     for (const inst of installs) {
-      await this.updateById(inst.id);
+      await this.updateById(inst);
     }
   }
 
   public async installOrUpdate(list: InstallItem[]): Promise<void> {
     const installs = await this.buildInstallerRunList(list);
     for (const inst of installs) {
-      await this.installOrUpdateById(inst.id);
+      await this.installOrUpdateById(inst);
     }
   }
 
   public async uninstall(list: InstallItem[]): Promise<void> {
     const installs = (await this.buildInstallerRunList(list)).reverse();
     for (const inst of installs) {
-      await this.uninstallById(inst.id);
+      await this.uninstallById(inst);
     }
   }
 }
