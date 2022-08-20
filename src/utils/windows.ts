@@ -63,3 +63,11 @@ export async function runOnceAfterRestart(id: string, script: string) {
 export async function removeRunOnceAfterRestart(id: string) {
   await run(`reg.exe delete "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce" /v "${id}" /f`);
 }
+
+export async function isApplicationRunning(name: string): Promise<boolean> {
+  try {
+    await run(`tasklist.exe /fi "ImageName eq ${name}" | find /I "${name}"`);
+    return true;
+  } catch {}
+  return false;
+}

@@ -3,6 +3,7 @@ import { existsSync } from "fs";
 import { join } from "path";
 import { exec, run } from "./cmd";
 import { sleep } from "./sleep";
+import { isApplicationRunning } from "./windows";
 import { readWindowsEnv, translateWindowsPath } from "./wsl";
 
 export async function dockerLogin(url: string, user: string, token: string) {
@@ -37,9 +38,34 @@ export async function restartDockerDesktop() {
   await waitForDockerInit(true);
 }
 
+export async function isDockerDesktopRunning() {
+  return await isApplicationRunning("Docker Desktop.exe");
+}
+
+export async function isDockerRunning() {
+  try {
+    await throwIfDockerNotRunning();
+    return true;
+  } catch {}
+  return false;
+}
+
+export async function throwIfDockerNotRunning() {
+  try {
+    await run("docker info");
+  } catch {
+    throw new Error(`Docker is not running`);
+  }
+}
+export async function throwIfDockerDesktopNotRunning() {
+  if (!(await isDockerDesktopRunning())) {
+    throw new Error(`Docker Desktop is not running`);
+  }
+}
+
 export async function getDockerDesktopConfigPath() {
-  const appdataPath = (await translateWindowsPath(await readWindowsEnv("appdata"))).trim();
-  return join(appdataPath, "Docker", "settings.json");
+  const dataPath = (await translateWindowsPath(await readWindowsEnv("appdata"))).trim();
+  return join(dataPath, "Docker", "settings.json");
 }
 
 export async function killDockerDesktop() {
@@ -82,7 +108,7 @@ export async function waitForDockerInit(isRestart: boolean = false) {
         }
         c++;
       }
-      await run("docker info");
+      await throwIfDockerNotRunning();
       if (c >= headerDelay) {
         if (isRestart) {
           console.info(chalk.grey("Docker is ready.                     ┬─┬ノ(º_ºノ)"));
