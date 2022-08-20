@@ -1,7 +1,7 @@
 import { extname } from "path";
 
 import { spawn } from "child_process";
-import { exec } from "./cmd";
+import { exec, run } from "./cmd";
 import { translateWslPath } from "./wsl";
 import Path from "path/posix";
 
@@ -38,4 +38,12 @@ export async function installVSCodeExtension(idOrPath: string, options?: { preRe
 export async function uninstallVSCodeExtension(id: string) {
   const command = `code --uninstall-extension ${id} `;
   await exec(command);
+}
+
+export async function killVsCode() {
+  try {
+    return await run('taskkill.exe /IM "Code.exe" /F');
+  } catch {
+    return false;
+  }
 }
