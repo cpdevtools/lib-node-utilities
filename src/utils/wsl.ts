@@ -31,6 +31,18 @@ export async function getWslVersion() {
   return null;
 }
 
+export async function getWslDefaultVersion() {
+  const verStr =
+    (await run(`wsl.exe --status`))
+      .split("\n")
+      .map((l) => l.trim())
+      .find((l) => l.includes("Default Version:"))
+      ?.split(":")?.[1]
+      ?.trim() ?? "0";
+
+  return Number.isNaN(+verStr) ? 0 : +verStr;
+}
+
 export async function isWslInstalled() {
   return getWslVersion() !== null;
 }
