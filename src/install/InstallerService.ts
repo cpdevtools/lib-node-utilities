@@ -3,6 +3,7 @@ import glob from "fast-glob";
 import { existsSync } from "fs";
 import Enumerable from "linq";
 import path from "path/posix";
+import { fileURLToPath } from "url";
 import { depGraphToArray } from "../utils/dep_graph";
 import { implementsAfterInstallOrUpdate } from "./hooks/AfterInstallOrUpdate";
 import { implementsAfterUninstall } from "./hooks/AfterUninstall";
@@ -34,19 +35,26 @@ export class InstallerService {
   }
 
   private async scanForInstallers() {
-    const files = (
-      await Promise.all(
-        this._scanDirs.filter((d) => existsSync(d)).map((d) => glob(["*.installer.js", "*/*.installer.js"].map((p) => path.join(d, p))))
-      )
-    ).flat();
-    const installers = (await Promise.all(files.map((f) => import("file://" + f))))
-      .filter((m) => !!m.default)
-      .map((m) => (Array.isArray(m.default) ? m.default : [m.default]))
-      .map((m: any[]) => {
-        return m.filter((i) => isValidInstaller(i)) as Installer[];
-      })
+    const filePromises = this._scanDirs
+      .filter((d) => existsSync(d))
+      .map((d) => ({ baseDir: d, promise: glob(["*.installer.js", "*/*.installer.js"], { cwd: d }) }));
+
+    const filePaths = (await Promise.all(filePromises.map((f) => f.promise)))
+      .map((files, idx) => files.map((f) => path.join(filePromises[idx].baseDir)))
       .flat();
-    return installers;
+
+    console.log("scanForInstallers", filePaths);
+
+    const result: Installer[] = [];
+    for (const filePath of filePaths) {
+      //const relPath = path.relative(__dirname, filePath);
+      let url = "file://" + path.normalize(filePath);
+      const m = await import(url);
+      if (isValidInstaller(m.default)) {
+        result.push(m.default);
+      }
+    }
+    return result;
   }
 
   private init() {
