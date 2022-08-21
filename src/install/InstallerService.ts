@@ -40,7 +40,7 @@ export class InstallerService {
       .map((d) => ({ baseDir: d, promise: glob(["*.installer.js", "*/*.installer.js"], { cwd: d }) }));
 
     const filePaths = (await Promise.all(filePromises.map((f) => f.promise)))
-      .map((files, idx) => files.map((f) => path.join(filePromises[idx].baseDir)))
+      .map((files, idx) => files.map((f) => path.join(filePromises[idx].baseDir, f)))
       .flat();
 
     console.log("scanForInstallers", filePaths);
