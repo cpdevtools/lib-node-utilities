@@ -1,8 +1,4 @@
 {
   "extends": "./tsconfig",
-  "compilerOptions": {
-    "module": "esnext",
-    "target": "esnext",
-    "outDir": "dist/mjs"
-  }
+  "compilerOptions": {}
 }

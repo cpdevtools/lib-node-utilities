@@ -1,5 +1,5 @@
 import { PackageJson } from "type-fest";
-import { readJsonFile, writeJsonFile } from "../dist/mjs/utils/json";
+import { readJsonFile, writeJsonFile } from "../src/utils/json";
 
 (async () => {
   const pkg = (await readJsonFile("./package.json")) as PackageJson;
@@ -18,5 +18,5 @@ import { readJsonFile, writeJsonFile } from "../dist/mjs/utils/json";
   await writeJsonFile("./dist/package.json", pkg, 2);
 
   await writeJsonFile("./dist/cjs/package.json", { type: "commonjs" }, 2);
-  await writeJsonFile("./dist/cjs/package.json", { type: "module" }, 2);
+  await writeJsonFile("./dist/mjs/package.json", { type: "module" }, 2);
 })();
