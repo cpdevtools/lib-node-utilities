@@ -1,4 +1,4 @@
-import { IPackageHandler } from "./IPackageHandler";
+import { IPackageHandler } from "./IPackageHandler.js";
 
 export interface WorkspaceCallResult {
   package: IPackageHandler;

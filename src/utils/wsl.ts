@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import semVer from "semver";
-import { exec, run } from "./cmd";
-import { isWin10, isWindows } from "./windows";
+import { exec, run } from "./cmd.js";
+import { isWin10, isWindows } from "./windows.js";
 
 export async function translateWindowsPath(path: string): Promise<string> {
   const result = await (await run(`wslpath -a -u "${path}"`)).trim();

@@ -1,4 +1,4 @@
-import simpleGit from "simple-git";
+import { simpleGit } from "simple-git";
 
 export async function getConfig(name: string) {
   const git = simpleGit();
@@ -7,7 +7,7 @@ export async function getConfig(name: string) {
 }
 
 export async function setConfig(name: string, value: string) {
-  const git = simpleGit();
+  const git = simpleGit(".");
   const result = await git.addConfig(name, value, false, "global");
   return result;
 }

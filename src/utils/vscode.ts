@@ -1,9 +1,9 @@
 import { extname } from "path";
 
 import { spawn } from "child_process";
-import { exec, run } from "./cmd";
-import { translateWslPath } from "./wsl";
 import Path from "path/posix";
+import { exec, run } from "./cmd.js";
+import { translateWslPath } from "./wsl.js";
 
 export function launchVSCode(path: string = ".") {
   spawn(`code ${path}`, { shell: true, detached: true, stdio: "ignore" });

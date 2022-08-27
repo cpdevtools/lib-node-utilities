@@ -1,3 +1,3 @@
-export * from "./detectPlatform";
-export * from "./Platform";
-export * from "./PlatformInstaller";
+export * from "./detectPlatform.js";
+export * from "./Platform.js";
+export * from "./PlatformInstaller.js";

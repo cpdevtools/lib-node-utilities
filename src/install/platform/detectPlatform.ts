@@ -1,6 +1,6 @@
 import isWsl from "is-wsl";
 import os from "os";
-import { Platform } from "./Platform";
+import { Platform } from "./Platform.js";
 
 export function detectPlatform(): Platform {
   if (isWsl) {

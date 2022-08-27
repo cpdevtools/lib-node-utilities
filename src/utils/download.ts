@@ -1,9 +1,10 @@
-import axios from "axios";
 import cliProgress from "cli-progress";
 import { differenceInMilliseconds, differenceInSeconds, formatDuration, intervalToDuration } from "date-fns";
 import fs from "fs";
 import { IncomingMessage } from "http";
 import { filter, map, Observable, Subject } from "rxjs";
+
+import { default as axios } from "axios";
 
 export interface FileDownloadEvent {
   type: "connecting" | "connected" | "progress" | "complete" | "error";

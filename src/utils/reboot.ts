@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import { exit } from "process";
-import { exec } from "./cmd";
+import { exec } from "./cmd.js";
 
 async function reboot(): Promise<never> {
   await exec(`shutdown.exe -r -t 0`);

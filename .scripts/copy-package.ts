@@ -1,5 +1,5 @@
 import { PackageJson } from "type-fest";
-import { readJsonFile, writeJsonFile } from "../src/utils/json";
+import { readJsonFile, writeJsonFile } from "../src/utils/json.js";
 
 (async () => {
   const pkg = (await readJsonFile("./package.json")) as PackageJson;

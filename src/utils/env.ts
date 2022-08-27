@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "fs/promises";
 import os from "os";
 import { join } from "path";
-import { run } from "./cmd";
+import { run } from "./cmd.js";
 const homedir = os.homedir();
 
 export async function wslEnv(key?: string, value?: string | null): Promise<{ [key: string]: string } | string | undefined> {

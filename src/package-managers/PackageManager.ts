@@ -2,9 +2,9 @@ import FsSync from "fs";
 import Fs from "fs/promises";
 import Path from "path/posix";
 import { PackageJson } from "type-fest";
-import { readJsonFile } from "../utils";
-import { PACKAGE_TYPES } from "./impl/PACKAGE_TYPES";
-import { IPackageHandler } from "./IPackageHandler";
+import { readJsonFile } from "../utils/index.js";
+import { PACKAGE_TYPES } from "./impl/PACKAGE_TYPES.js";
+import { IPackageHandler } from "./IPackageHandler.js";
 
 export class PackageManager {
   public static async loadPackage(path: string) {

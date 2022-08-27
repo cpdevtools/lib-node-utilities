@@ -1,1 +1,1 @@
-export * from "./Installer";
+export * from "./Installer.js";

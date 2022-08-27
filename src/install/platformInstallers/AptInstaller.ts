@@ -1,4 +1,4 @@
-import { PlatformInstallerBase } from "./PlatformInstallerBase";
+import { PlatformInstallerBase } from "./PlatformInstallerBase.js";
 
 export class AptInstaller extends PlatformInstallerBase {
   public get isInstalled(): Promise<boolean> {
