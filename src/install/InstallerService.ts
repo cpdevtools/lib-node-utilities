@@ -48,10 +48,20 @@ export class InstallerService {
     const result: Installer[] = [];
     for (const filePath of filePaths) {
       //const relPath = path.relative(__dirname, filePath);
-      let url = "file://" + path.normalize(filePath);
-      const m = await import(url);
-      if (isValidInstaller(m.default)) {
-        result.push(m.default);
+      let url = path.normalize(filePath);
+      try {
+        console.log("Try to load module: ", url);
+
+        const m = await import(url);
+
+        console.log("loaded module", m);
+
+        if (isValidInstaller(m.default)) {
+          result.push(m.default);
+        }
+      } catch (e) {
+        console.error("---", e);
+        //throw e;
       }
     }
     return result;
