@@ -3,7 +3,7 @@ import glob from "fast-glob";
 import { existsSync } from "fs";
 import Enumerable from "linq";
 import path from "path/posix";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import { depGraphToArray } from "../utils/dep_graph.js";
 import { implementsAfterInstallOrUpdate } from "./hooks/AfterInstallOrUpdate.js";
 import { implementsAfterUninstall } from "./hooks/AfterUninstall.js";
@@ -24,7 +24,7 @@ export class InstallerService {
   private _installers: Map<string, Installer> = new Map();
 
   constructor() {
-    this.scanDir(path.join(__dirname, "_installers_"));
+    this.scanDir(new URL("_installers_", import.meta.url).toString());
   }
 
   public scanDir(path: string) {
@@ -35,33 +35,18 @@ export class InstallerService {
   }
 
   private async scanForInstallers() {
-    const filePromises = this._scanDirs
-      .filter((d) => existsSync(d))
-      .map((d) => ({ baseDir: d, promise: glob(["*.installer.js", "*/*.installer.js"], { cwd: d }) }));
-
-    const filePaths = (await Promise.all(filePromises.map((f) => f.promise)))
-      .map((files, idx) => files.map((f) => path.join(filePromises[idx].baseDir, f)))
+    const files = this._scanDirs
+      .map((url) => fileURLToPath(url))
+      .filter((dir) => existsSync(dir))
+      .map((dir) => glob.sync(["*.installer.js", "*/*.installer.js"], { cwd: dir }).map((f) => path.join(dir, f)))
       .flat();
 
-    console.log("scanForInstallers", filePaths);
-
     const result: Installer[] = [];
-    for (const filePath of filePaths) {
-      //const relPath = path.relative(__dirname, filePath);
-      let url = path.normalize(filePath);
-      try {
-        console.log("Try to load module: ", url);
-
-        const m = await import(url);
-
-        console.log("loaded module", m);
-
-        if (isValidInstaller(m.default)) {
-          result.push(m.default);
-        }
-      } catch (e) {
-        console.error("---", e);
-        //throw e;
+    for (const file of files) {
+      const modulePath = pathToFileURL(file).toString();
+      const module = await import(modulePath);
+      if (isValidInstaller(module.default)) {
+        result.push(module.default);
       }
     }
     return result;
