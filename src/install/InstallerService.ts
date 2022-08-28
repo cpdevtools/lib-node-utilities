@@ -127,7 +127,6 @@ export class InstallerService {
         return;
       }
     }
-
     await inst?.installOrUpdate();
     if (implementsAfterInstallOrUpdate(inst)) {
       await inst.afterInstallOrUpdate();

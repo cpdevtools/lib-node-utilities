@@ -26,7 +26,6 @@ export async function startDockerDesktop() {
       await sleep(500);
     }
   } catch (e) {
-    console.error(e);
     throw e;
   }
 }
@@ -79,7 +78,6 @@ export async function killDockerDesktop() {
 export async function waitForDockerInit(isRestart: boolean = false) {
   let c = 0;
   const headerDelay = isRestart ? 120 : 8;
-
   while (c !== -1) {
     try {
       if (c < headerDelay) {
@@ -108,6 +106,7 @@ export async function waitForDockerInit(isRestart: boolean = false) {
         }
         c++;
       }
+
       await throwIfDockerNotRunning();
       if (c >= headerDelay) {
         if (isRestart) {
