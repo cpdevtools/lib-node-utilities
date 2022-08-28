@@ -4,6 +4,7 @@ import { spawn } from "child_process";
 import Path from "path/posix";
 import { exec, run } from "./cmd.js";
 import { translateWslPath } from "./wsl.js";
+import isWsl from "is-wsl";
 
 export function launchVSCode(path: string = ".") {
   spawn(`code ${path}`, { shell: true, detached: true, stdio: "ignore" });
@@ -31,7 +32,8 @@ export async function launchVSCodeDevContainer(containerPath: string = ".", open
 }
 
 export async function installVSCodeExtension(idOrPath: string, options?: { preRelease?: boolean; force?: boolean }) {
-  const command = `code --install-extension ${idOrPath} ${options?.preRelease ? "--pre-release" : ""} ${options?.force ? "--force" : ""}`;
+  const cmd = isWsl ? "cd /mnt/c/ && cmd.exe /c code" : "code";
+  const command = `${cmd} --install-extension ${idOrPath} ${options?.preRelease ? "--pre-release" : ""} ${options?.force ? "--force" : ""}`;
   await exec(command);
 }
 
