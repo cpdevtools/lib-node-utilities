@@ -4,7 +4,7 @@ import { join } from "path";
 import { run } from "./cmd.js";
 const homedir = os.homedir();
 
-export async function wslEnv(key?: string, value?: string | null): Promise<{ [key: string]: string } | string | undefined> {
+export async function envVars(key?: string, value?: string | null): Promise<{ [key: string]: string } | string | undefined> {
   if (typeof key !== "string") {
     const result = await run("env");
     const lines = result.split("\n").map((l) => l.trim());
@@ -15,7 +15,7 @@ export async function wslEnv(key?: string, value?: string | null): Promise<{ [ke
     });
     return env;
   } else if (value === undefined) {
-    const env = (await wslEnv()) as { [key: string]: string };
+    const env = (await envVars()) as { [key: string]: string };
     return env[key];
   } else if (value === null) {
     await deleteEnvVar(key);
