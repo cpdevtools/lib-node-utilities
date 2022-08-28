@@ -1,8 +1,7 @@
 import os from "os";
-import { promisified as regEdit } from "regedit";
 import semver from "semver";
-import { exec, run } from "./cmd";
-import { translateWindowsPath } from "./wsl";
+import { run } from "./cmd.js";
+import { translateWindowsPath } from "./wsl.js";
 
 export interface AppxPackage {
   Name: string;

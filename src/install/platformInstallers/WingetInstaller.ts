@@ -1,5 +1,5 @@
-import { uninstallWinget, updateOrInstallWinget, updateWinget } from "../../utils";
-import { PlatformInstallerBase } from "./PlatformInstallerBase";
+import { uninstallWinget, updateOrInstallWinget, updateWinget } from "../../utils/index.js";
+import { PlatformInstallerBase } from "./PlatformInstallerBase.js";
 
 export class WingetInstaller extends PlatformInstallerBase {
   public get isInstalled(): Promise<boolean> {

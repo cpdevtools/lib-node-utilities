@@ -1,4 +1,4 @@
-import { WorkspaceCallResult } from "./WorkspaceCallResult";
+import { WorkspaceCallResult } from "./WorkspaceCallResult.js";
 
 export interface WorkspaceCallError<T = unknown> extends WorkspaceCallResult {
   success: false;

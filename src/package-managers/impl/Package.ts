@@ -5,14 +5,14 @@ import FsSync from "fs";
 import Enumerable from "linq";
 import Path from "path/posix";
 import { PackageJson } from "type-fest";
-import { exec } from "../../utils";
-import { IPackageHandler } from "../IPackageHandler";
-import { PackageManager } from "../PackageManager";
-import { RunScriptOptions } from "../RunScriptOptions";
-import { isWorkspaceCallError, WorkspaceCallError } from "../WorkspaceCallError";
-import { WorkspaceCallOptions } from "../WorkspaceCallOptions";
-import { isWorkspaceCallSuccess, WorkspaceCallSuccess } from "../WorkspaceCallSuccess";
-import { WorkspaceSortingOptions } from "../WorkspaceSortingOptions";
+import { exec } from "../../utils/index.js";
+import { IPackageHandler } from "../IPackageHandler.js";
+import { PackageManager } from "../PackageManager.js";
+import { RunScriptOptions } from "../RunScriptOptions.js";
+import { isWorkspaceCallError, WorkspaceCallError } from "../WorkspaceCallError.js";
+import { WorkspaceCallOptions } from "../WorkspaceCallOptions.js";
+import { isWorkspaceCallSuccess, WorkspaceCallSuccess } from "../WorkspaceCallSuccess.js";
+import { WorkspaceSortingOptions } from "../WorkspaceSortingOptions.js";
 
 export abstract class Package implements IPackageHandler {
   private readonly _path: string;

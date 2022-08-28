@@ -1,5 +1,5 @@
-import { exec, run } from "../../utils";
-import { PlatformInstallerBase } from "./PlatformInstallerBase";
+import { exec, run } from "../../utils/index.js";
+import { PlatformInstallerBase } from "./PlatformInstallerBase.js";
 
 export class NodeInstaller extends PlatformInstallerBase {
   public get isInstalled(): Promise<boolean> {

@@ -1,6 +1,6 @@
 import { Class } from "type-fest";
-import { PlatformInstaller } from "../platform/PlatformInstaller";
-import { InstallerPlatforms } from "./InstallerPlatforms";
+import { PlatformInstaller } from "../platform/PlatformInstaller.js";
+import { InstallerPlatforms } from "./InstallerPlatforms.js";
 
 export interface Installer {
   id: string;

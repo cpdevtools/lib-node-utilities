@@ -1,5 +1,5 @@
 import { PackageJson } from "type-fest";
-import { IPackageHandler } from "./IPackageHandler";
+import { IPackageHandler } from "./IPackageHandler.js";
 
 export interface IPackageHandlerType {
   detect(data: PackageJson, path: string, filename: string): boolean | Promise<boolean>;

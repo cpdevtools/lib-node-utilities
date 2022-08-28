@@ -3,20 +3,20 @@ import glob from "fast-glob";
 import { existsSync } from "fs";
 import Enumerable from "linq";
 import path from "path/posix";
-import { fileURLToPath } from "url";
-import { depGraphToArray } from "../utils/dep_graph";
-import { implementsAfterInstallOrUpdate } from "./hooks/AfterInstallOrUpdate";
-import { implementsAfterUninstall } from "./hooks/AfterUninstall";
-import { implementsAfterUpdate } from "./hooks/AfterUpdate";
-import { implementsBeforeInstallOrUpdate } from "./hooks/BeforeInstallOrUpdate";
-import { implementsBeforeUninstall } from "./hooks/BeforeUninstall";
-import { implementsBeforeUpdate } from "./hooks/BeforeUpdate";
-import { Installer, isValidInstaller } from "./installer/Installer";
-import { InstallItem } from "./InstallItem";
-import { detectPlatform } from "./platform/detectPlatform";
-import { KnownPlatforms } from "./platform/KnownPlatforms";
-import { Platform } from "./platform/Platform";
-import { PlatformInstaller } from "./platform/PlatformInstaller";
+import { fileURLToPath, pathToFileURL } from "url";
+import { depGraphToArray } from "../utils/dep_graph.js";
+import { implementsAfterInstallOrUpdate } from "./hooks/AfterInstallOrUpdate.js";
+import { implementsAfterUninstall } from "./hooks/AfterUninstall.js";
+import { implementsAfterUpdate } from "./hooks/AfterUpdate.js";
+import { implementsBeforeInstallOrUpdate } from "./hooks/BeforeInstallOrUpdate.js";
+import { implementsBeforeUninstall } from "./hooks/BeforeUninstall.js";
+import { implementsBeforeUpdate } from "./hooks/BeforeUpdate.js";
+import { Installer, isValidInstaller } from "./installer/Installer.js";
+import { InstallItem } from "./InstallItem.js";
+import { detectPlatform } from "./platform/detectPlatform.js";
+import { KnownPlatforms } from "./platform/KnownPlatforms.js";
+import { Platform } from "./platform/Platform.js";
+import { PlatformInstaller } from "./platform/PlatformInstaller.js";
 
 export class InstallerService {
   private _init?: Promise<void>;
@@ -24,7 +24,7 @@ export class InstallerService {
   private _installers: Map<string, Installer> = new Map();
 
   constructor() {
-    this.scanDir(path.join(__dirname, "_installers_"));
+    this.scanDir(new URL("_installers_", import.meta.url).toString());
   }
 
   public scanDir(path: string) {
@@ -35,23 +35,18 @@ export class InstallerService {
   }
 
   private async scanForInstallers() {
-    const filePromises = this._scanDirs
-      .filter((d) => existsSync(d))
-      .map((d) => ({ baseDir: d, promise: glob(["*.installer.js", "*/*.installer.js"], { cwd: d }) }));
-
-    const filePaths = (await Promise.all(filePromises.map((f) => f.promise)))
-      .map((files, idx) => files.map((f) => path.join(filePromises[idx].baseDir, f)))
+    const files = this._scanDirs
+      .map((url) => fileURLToPath(url))
+      .filter((dir) => existsSync(dir))
+      .map((dir) => glob.sync(["*.installer.js", "*/*.installer.js"], { cwd: dir }).map((f) => path.join(dir, f)))
       .flat();
 
-    console.log("scanForInstallers", filePaths);
-
     const result: Installer[] = [];
-    for (const filePath of filePaths) {
-      //const relPath = path.relative(__dirname, filePath);
-      let url = "file://" + path.normalize(filePath);
-      const m = await import(url);
-      if (isValidInstaller(m.default)) {
-        result.push(m.default);
+    for (const file of files) {
+      const modulePath = pathToFileURL(file).toString();
+      const module = await import(modulePath);
+      if (isValidInstaller(module.default)) {
+        result.push(module.default);
       }
     }
     return result;

@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { exec } from "./cmd";
+import { exec } from "./cmd.js";
 
 export async function githubLogin(user: string, token: string) {
   console.info(`Attempting to log into github.com with user ${chalk.yellowBright(user)}`);

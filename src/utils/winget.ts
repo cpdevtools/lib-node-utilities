@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { exec, run } from "./cmd";
+import { exec, run } from "./cmd.js";
 
 export interface WingetPackage {
   id: string;
