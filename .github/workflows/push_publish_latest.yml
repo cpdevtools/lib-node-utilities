@@ -60,6 +60,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
+          tag_name: v${{ steps.version.outputs.targetVersion }}
           release_name: Release Version ${{ steps.version.outputs.targetVersion }}
           body: |
             Generated Release v${{ steps.version.outputs.targetVersion }}
