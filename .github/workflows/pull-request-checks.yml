@@ -11,6 +11,6 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Check Version
-        uses: cpdevtools/action-versions@0.4
+        uses: cpdevtools/action-versions@v0.4
         with:
           failInvalidCanCreate: true

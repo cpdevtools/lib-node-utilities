@@ -15,6 +15,6 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Create Pull Request
-        uses: cpdevtools/action-versions@0.4
+        uses: cpdevtools/action-versions@v0.4
         with:
           autoCreatePullRequest: true
