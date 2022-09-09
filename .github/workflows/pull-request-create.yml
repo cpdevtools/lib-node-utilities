@@ -1,0 +1,20 @@
+name: Create pull request on version change
+
+on:
+  push:
+    branches:
+      - "main"
+      - "master"
+      - "v/*"
+
+jobs:
+  create_pull_on_new_version:
+    name: Create a version pull request if nessisary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create Pull Request
+        uses: cpdevtools/action-versions@0.4
+        with:
+          autoCreatePullRequest: true
