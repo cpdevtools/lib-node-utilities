@@ -1,6 +1,6 @@
 {
   "name": "@cpdevtools/lib-node-utilities",
-  "version": "0.4.20",
+  "version": "0.4.21",
   "repository": "https://github.com/cpdevtools/lib-node-utilities",
   "type": "module",
   "typings": "./index.d.ts",
