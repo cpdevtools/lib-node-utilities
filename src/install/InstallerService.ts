@@ -4,19 +4,19 @@ import { existsSync } from "fs";
 import Enumerable from "linq";
 import path from "path/posix";
 import { fileURLToPath, pathToFileURL } from "url";
-import { depGraphToArray } from "../utils/dep_graph.js";
-import { implementsAfterInstallOrUpdate } from "./hooks/AfterInstallOrUpdate.js";
+import { depGraphToArray } from "../utils/dep_graph";
+import { implementsAfterInstallOrUpdate } from "./hooks/AfterInstallOrUpdate";
 import { implementsAfterUninstall } from "./hooks/AfterUninstall.js";
 import { implementsAfterUpdate } from "./hooks/AfterUpdate.js";
-import { implementsBeforeInstallOrUpdate } from "./hooks/BeforeInstallOrUpdate.js";
-import { implementsBeforeUninstall } from "./hooks/BeforeUninstall.js";
-import { implementsBeforeUpdate } from "./hooks/BeforeUpdate.js";
-import { Installer, isValidInstaller } from "./installer/Installer.js";
-import { InstallItem } from "./InstallItem.js";
-import { detectPlatform } from "./platform/detectPlatform.js";
-import { KnownPlatforms } from "./platform/KnownPlatforms.js";
-import { Platform } from "./platform/Platform.js";
-import { PlatformInstaller } from "./platform/PlatformInstaller.js";
+import { implementsBeforeInstallOrUpdate } from "./hooks/BeforeInstallOrUpdate";
+import { implementsBeforeUninstall } from "./hooks/BeforeUninstall";
+import { implementsBeforeUpdate } from "./hooks/BeforeUpdate";
+import { Installer, isValidInstaller } from "./installer/Installer";
+import { InstallItem } from "./InstallItem";
+import { detectPlatform } from "./platform/detectPlatform";
+import { KnownPlatforms } from "./platform/KnownPlatforms";
+import { Platform } from "./platform/Platform";
+import { PlatformInstaller } from "./platform/PlatformInstaller";
 
 export class InstallerService {
   private _init?: Promise<void>;
@@ -24,7 +24,7 @@ export class InstallerService {
   private _installers: Map<string, Installer> = new Map();
 
   constructor() {
-    this.scanDir(new URL("_installers_", import.meta.url).toString());
+    this.scanDir(path.join(__dirname, "_installers_"));
   }
 
   public scanDir(path: string) {

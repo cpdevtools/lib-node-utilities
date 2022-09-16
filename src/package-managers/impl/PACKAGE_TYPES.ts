@@ -1,6 +1,6 @@
-import { IPackageHandlerType } from "../IPackageHandlerType.js";
-import { NpmPackage } from "./NpmPackage.js";
-import { PnpmPackage } from "./PNpmPackage.js";
-import { YarnPackage } from "./YarnPackage.js";
+import { IPackageHandlerType } from "../IPackageHandlerType";
+import { NpmPackage } from "./NpmPackage";
+import { PnpmPackage } from "./PNpmPackage";
+import { YarnPackage } from "./YarnPackage";
 
 export const PACKAGE_TYPES: IPackageHandlerType[] = [PnpmPackage, YarnPackage, NpmPackage];

@@ -2,8 +2,8 @@ import { extname } from "path";
 
 import { spawn } from "child_process";
 import Path from "path/posix";
-import { exec, run } from "./cmd.js";
-import { translateWslPath } from "./wsl.js";
+import { exec, run } from "./cmd";
+import { translateWslPath } from "./wsl";
 import isWsl from "is-wsl";
 
 export function launchVSCode(path: string = ".") {

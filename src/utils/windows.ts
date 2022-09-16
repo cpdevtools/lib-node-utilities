@@ -1,7 +1,7 @@
 import os from "os";
 import semver from "semver";
-import { run } from "./cmd.js";
-import { translateWindowsPath } from "./wsl.js";
+import { run } from "./cmd";
+import { translateWindowsPath } from "./wsl";
 
 export interface AppxPackage {
   Name: string;

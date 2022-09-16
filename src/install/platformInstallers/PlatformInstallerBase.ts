@@ -1,4 +1,4 @@
-import { PlatformInstaller } from "../platform/PlatformInstaller.js";
+import { PlatformInstaller } from "../platform/PlatformInstaller";
 
 export abstract class PlatformInstallerBase implements PlatformInstaller {
   constructor(

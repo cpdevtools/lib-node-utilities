@@ -1,9 +1,9 @@
 import { PackageJson } from "type-fest";
-import { RunScriptOptions } from "./RunScriptOptions.js";
-import { WorkspaceCallError } from "./WorkspaceCallError.js";
-import { WorkspaceCallOptions } from "./WorkspaceCallOptions.js";
-import { WorkspaceCallSuccess } from "./WorkspaceCallSuccess.js";
-import { WorkspaceSortingOptions } from "./WorkspaceSortingOptions.js";
+import { RunScriptOptions } from "./RunScriptOptions";
+import { WorkspaceCallError } from "./WorkspaceCallError";
+import { WorkspaceCallOptions } from "./WorkspaceCallOptions";
+import { WorkspaceCallSuccess } from "./WorkspaceCallSuccess";
+import { WorkspaceSortingOptions } from "./WorkspaceSortingOptions";
 
 export interface IPackageHandler {
   runScript(script: string, options?: Partial<RunScriptOptions>): Promise<number | undefined>;
