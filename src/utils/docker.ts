@@ -1,10 +1,10 @@
 import chalk from "chalk";
 import { existsSync } from "fs";
 import { join } from "path";
-import { exec, run } from "./cmd.js";
-import { sleep } from "./sleep.js";
-import { isApplicationRunning } from "./windows.js";
-import { readWindowsEnv, translateWindowsPath } from "./wsl.js";
+import { exec, run } from "./cmd";
+import { sleep } from "./sleep";
+import { isApplicationRunning } from "./windows";
+import { readWindowsEnv, translateWindowsPath } from "./wsl";
 
 export async function dockerLogin(url: string, user: string, token: string) {
   console.info(`Attempting to log docker into ${chalk.blueBright(url)} with user ${chalk.yellowBright(user)}`);

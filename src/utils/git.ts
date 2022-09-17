@@ -1,6 +1,6 @@
 import { existsSync } from "fs";
 import { simpleGit } from "simple-git";
-import { exec } from "./cmd.js";
+import { exec } from "./cmd";
 
 export async function getConfig(name: string) {
   const git = simpleGit();

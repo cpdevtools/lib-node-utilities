@@ -1,8 +1,8 @@
 import { existsSync } from "fs";
 import { chmod, rm, writeFile } from "fs/promises";
 import path from "path";
-import { exec } from "../../utils/index.js";
-import { PlatformInstallerBase } from "./PlatformInstallerBase.js";
+import { exec } from "../../utils";
+import { PlatformInstallerBase } from "./PlatformInstallerBase";
 
 export abstract class BashInstaller extends PlatformInstallerBase {
   public get isInstalled(): Promise<boolean> {

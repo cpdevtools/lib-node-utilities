@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "fs/promises";
 import os from "os";
 import { join } from "path";
-import { run } from "./cmd.js";
+import { run } from "./cmd";
 const homedir = os.homedir();
 
 export async function envVars(key?: string, value?: string | null): Promise<{ [key: string]: string } | string | undefined> {

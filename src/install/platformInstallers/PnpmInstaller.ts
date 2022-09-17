@@ -1,5 +1,5 @@
-import { exec, run } from "../../utils/cmd.js";
-import { PlatformInstallerBase } from "./PlatformInstallerBase.js";
+import { exec, run } from "../../utils/cmd";
+import { PlatformInstallerBase } from "./PlatformInstallerBase";
 
 export class PnpmInstaller extends PlatformInstallerBase {
   public get isInstalled(): Promise<boolean> {

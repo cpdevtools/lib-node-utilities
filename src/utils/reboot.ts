@@ -1,6 +1,5 @@
-import inquirer from "inquirer";
 import { exit } from "process";
-import { exec } from "./cmd.js";
+import { exec } from "./cmd";
 
 async function reboot(): Promise<never> {
   await exec(`shutdown.exe -r -t 0`);
@@ -14,7 +13,7 @@ export async function rebootWindows(prompt: boolean = false): Promise<void | nev
   if (!prompt) {
     await reboot();
   }
-
+  const inquirer = (await import("inquirer")).default;
   const answer = await inquirer.prompt({
     type: "confirm",
     name: "rebootNow",

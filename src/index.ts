@@ -1,3 +1,3 @@
-export * from "./package-managers/index.js";
-export * from "./utils/index.js";
-export * from "./install/index.js";
+export * from "./package-managers/index";
+export * from "./utils/index";
+export * from "./install/index";

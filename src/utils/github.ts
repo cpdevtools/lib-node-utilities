@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { exec } from "./cmd.js";
+import { exec } from "./cmd";
 
 export interface GithubRepoOptions {
   cwd?: string;

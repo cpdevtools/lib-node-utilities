@@ -1,5 +1,5 @@
 import { PackageJson } from "type-fest";
-import { Package } from "./Package.js";
+import { Package } from "./Package";
 
 export class NpmPackage extends Package {
   public static async detect(data: PackageJson, path: string, filename: string) {
