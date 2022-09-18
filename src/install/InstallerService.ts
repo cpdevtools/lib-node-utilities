@@ -39,7 +39,8 @@ export class InstallerService {
         this._scanDirs.filter((d) => existsSync(d)).map((d) => glob(["*.installer.js", "*/*.installer.js"].map((p) => path.join(d, p))))
       )
     ).flat();
-    const installers = (await Promise.all(files.map((f) => require(f))))
+    const installers = files
+      .map((f) => require(f))
       .filter((m) => !!m.default)
       .map((m) => (Array.isArray(m.default) ? m.default : [m.default]))
       .map((m: any[]) => {
