@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { importChalk } from "./chalk";
 import { exec, run } from "./cmd";
 
 export interface WingetPackage {
@@ -23,6 +23,7 @@ export async function isInstalledWsl(id: string) {
 }
 
 export async function installWinget(id: string) {
+  const chalk = await importChalk();
   console.info(chalk.greenBright(`${chalk.cyanBright(id)}: Installing...`));
   console.info();
   const result = await exec(`winget.exe install -e --id ${id}`);
@@ -32,6 +33,7 @@ export async function installWinget(id: string) {
 }
 
 export async function uninstallWinget(id: string) {
+  const chalk = await importChalk();
   console.info(chalk.greenBright(`${chalk.cyanBright(id)}: Uninstalling...`));
   console.info();
   const result = await exec(`winget.exe uninstall -e --id ${id}`);
@@ -41,6 +43,7 @@ export async function uninstallWinget(id: string) {
 }
 
 export async function updateWinget(id: string, args?: string) {
+  const chalk = await importChalk();
   console.info(chalk.blueBright(`${chalk.cyanBright(id)}: Checking for updates...`));
   console.info();
   const result = await exec(`winget.exe upgrade -he --verbose-logs --id ${id}${args ? " " + args : ""}`);

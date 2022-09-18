@@ -1,12 +1,13 @@
-import chalk from "chalk";
 import { existsSync } from "fs";
 import { join } from "path";
+import { importChalk } from "./chalk";
 import { exec, run } from "./cmd";
 import { sleep } from "./sleep";
 import { isApplicationRunning } from "./windows";
 import { readWindowsEnv, translateWindowsPath } from "./wsl";
 
 export async function dockerLogin(url: string, user: string, token: string) {
+  const chalk = await importChalk();
   console.info(`Attempting to log docker into ${chalk.blueBright(url)} with user ${chalk.yellowBright(user)}`);
   const result = await exec(`echo "${token}" | docker login ${url} -u ${user} --password-stdin`);
   return !result;
@@ -31,6 +32,7 @@ export async function startDockerDesktop() {
 }
 
 export async function restartDockerDesktop() {
+  const chalk = await importChalk();
   console.info(chalk.gray("Restarting Docker Desktop..."));
   await killDockerDesktop();
   await startDockerDesktop();
@@ -78,6 +80,7 @@ export async function killDockerDesktop() {
 }
 
 export async function waitForDockerInit(isRestart: boolean = false) {
+  const chalk = await importChalk();
   let c = 0;
   const headerDelay = isRestart ? 120 : 8;
   while (c !== -1) {

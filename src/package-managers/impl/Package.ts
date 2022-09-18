@@ -1,11 +1,10 @@
-import chalk from "chalk";
 import { DepGraph } from "dependency-graph";
 import glob from "fast-glob";
 import FsSync from "fs";
 import Enumerable from "linq";
 import Path from "path/posix";
 import { PackageJson } from "type-fest";
-import { exec } from "../../utils/index.js";
+import { exec, importChalk } from "../../utils/index.js";
 import { IPackageHandler } from "../IPackageHandler";
 import { PackageManager } from "../PackageManager";
 import { RunScriptOptions } from "../RunScriptOptions";
@@ -86,6 +85,7 @@ export abstract class Package implements IPackageHandler {
   }
 
   public async execCmd(cmd: string) {
+    const chalk = await importChalk();
     this.logInfo(chalk.blueBright(`Executing: ${chalk.gray(cmd)}`));
     return await exec(cmd, { cwd: this.path });
   }
@@ -102,6 +102,7 @@ export abstract class Package implements IPackageHandler {
   }
 
   public async runScript(script: string, options?: Partial<RunScriptOptions>): Promise<number | undefined> {
+    const chalk = await importChalk();
     const opts: RunScriptOptions = {
       ...options,
       throwOnError: options?.throwOnError ?? true,
@@ -309,19 +310,23 @@ export abstract class Package implements IPackageHandler {
     return depGraph;
   }
 
-  protected printLog(msg: string) {
+  protected async printLog(msg: string) {
+    const chalk = await importChalk();
     return chalk.white(chalk.blueBright(`[${chalk.yellow(this.name)}]`) + ` ${msg}`);
   }
 
-  protected logInfo(msg: string) {
+  protected async logInfo(msg: string) {
+    const chalk = await importChalk();
     console.info(`${chalk.bgGray.black.bold(" Info ")} ${this.printLog(msg)}`);
   }
 
-  protected logWarn(msg: string) {
+  protected async logWarn(msg: string) {
+    const chalk = await importChalk();
     console.warn(`${chalk.bgYellow.black.bold(" Warning ")} ${this.printLog(msg)}`);
   }
 
-  protected logError(msg: string) {
+  protected async logError(msg: string) {
+    const chalk = await importChalk();
     console.error(`${chalk.bgRed.white.bold(" ERROR ")} ${this.printLog(msg)}`);
   }
 

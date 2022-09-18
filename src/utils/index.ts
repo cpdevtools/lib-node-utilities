@@ -1,3 +1,4 @@
+export * from "./chalk";
 export * from "./cmd";
 export * from "./docker";
 export * from "./download";
@@ -5,6 +6,7 @@ export * from "./env";
 export * from "./git";
 export * from "./github";
 export * from "./importEsm";
+export * from "./inquirer";
 export * from "./json";
 export * from "./reboot";
 export * from "./sleep";
