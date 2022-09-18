@@ -44,7 +44,7 @@ export async function getWslDefaultVersion() {
 }
 
 export async function isWslInstalled() {
-  return getWslVersion() !== null;
+  return (await getWslVersion()) !== null;
 }
 
 export async function installWSL() {
