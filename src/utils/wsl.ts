@@ -1,5 +1,5 @@
-import chalk from "chalk";
 import semVer from "semver";
+import { importChalk } from "./chalk";
 import { exec, run } from "./cmd";
 import { isWin10, isWindows } from "./windows";
 
@@ -61,6 +61,7 @@ export async function installWSL() {
 }
 
 export async function updateWSL() {
+  const chalk = await importChalk();
   if (isWindows) {
     if (isWin10) {
       console.info(chalk.gray(`Applying wsl update for windows 10...`));

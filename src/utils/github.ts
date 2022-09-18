@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { importChalk } from "./chalk";
 import { exec } from "./cmd";
 
 export interface GithubRepoOptions {
@@ -74,6 +74,7 @@ export interface GithubRepoCreateOptions extends GithubRepoOptions {
 }
 
 export async function githubLogin(user: string, token: string) {
+  const chalk = await importChalk();
   console.info(`Attempting to log into github.com with user ${chalk.yellowBright(user)}`);
   const result = await exec(`echo "${token}" | gh auth login --with-token`);
   return !result;

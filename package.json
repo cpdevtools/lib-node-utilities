@@ -1,6 +1,6 @@
 {
   "name": "@cpdevtools/lib-node-utilities",
-  "version": "0.4.24",
+  "version": "0.4.25",
   "repository": "https://github.com/cpdevtools/lib-node-utilities",
   "typings": "./index.d.ts",
   "main": "./index.js",
@@ -50,16 +50,17 @@
     "*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
+    "@inquirer/select": "0.0.26-alpha.0",
     "@octokit/rest": "^19.0.3",
     "@types/node": "^18.6.1",
     "axios": "^0.27.2",
-    "chalk": "^4.0.0",
+    "chalk": "5",
     "cli-highlight": "^2.1.11",
     "cli-progress": "^3.11.2",
     "date-fns": "^2.29.1",
     "dependency-graph": "^0.11.0",
     "fast-glob": "^3.2.11",
-    "inquirer": "^8.0.2",
+    "inquirer": "^9.1.1",
     "is-docker": "^2.2.1",
     "is-wsl": "^2.2.0",
     "linq": "^3.2.4",
