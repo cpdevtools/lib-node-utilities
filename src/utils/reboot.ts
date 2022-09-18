@@ -1,5 +1,8 @@
 import { exit } from "process";
 import { exec } from "./cmd";
+import { dynamicImport } from "tsimportlib";
+import type inquirer from "inquirer";
+type Inquirer = typeof inquirer;
 
 async function reboot(): Promise<never> {
   await exec(`shutdown.exe -r -t 0`);
@@ -13,7 +16,7 @@ export async function rebootWindows(prompt: boolean = false): Promise<void | nev
   if (!prompt) {
     await reboot();
   }
-  const inquirer = (await import("inquirer")).default;
+  const inquirer = (await dynamicImport("inquirer", module)).default as Inquirer;
   const answer = await inquirer.prompt({
     type: "confirm",
     name: "rebootNow",
