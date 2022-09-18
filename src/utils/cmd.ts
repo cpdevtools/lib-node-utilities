@@ -32,6 +32,10 @@ export function run(cmd: string, { cwd }: { cwd?: string } = {}): Promise<string
         }
       });
 
+      child.on("error", (e) => {
+        rej(e);
+      });
+
       child.stdout?.on("data", (d: Buffer) => {
         const str = Buffer.from(d.filter((b) => !!b)).toString("ascii");
         data.push(str);
