@@ -1,6 +1,6 @@
 {
   "name": "@cpdevtools/lib-node-utilities",
-  "version": "0.4.22",
+  "version": "0.4.23",
   "repository": "https://github.com/cpdevtools/lib-node-utilities",
   "typings": "./index.d.ts",
   "main": "./index.js",
@@ -10,6 +10,7 @@
   "scripts": {
     "prepare": "run-s prepare:* && husky install",
     "prepare:husky": "husky install",
+    "prepare:remove-tags": "git tag | xargs git tag -d",
     "prepare:build": "pnpm run build",
     "prepare:link": "cd ./dist && pnpm unlink && pnpm link --global",
     "build": "run-s build:*",
