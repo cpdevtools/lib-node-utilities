@@ -1,6 +1,6 @@
 {
   "name": "@cpdevtools/lib-node-utilities",
-  "version": "0.4.21",
+  "version": "0.4.22",
   "repository": "https://github.com/cpdevtools/lib-node-utilities",
   "typings": "./index.d.ts",
   "main": "./index.js",
@@ -68,6 +68,7 @@
     "simple-git": "^3.13.0",
     "strip-color": "^0.1.0",
     "ts-node": "^10.9.1",
+    "tsimportlib": "^0.0.3",
     "tslib": "^2.4.0",
     "type-fest": "^2.17.0",
     "typescript": "^4.7.4",
