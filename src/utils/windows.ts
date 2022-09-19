@@ -1,6 +1,6 @@
 import os from "os";
 import semver from "semver";
-import { run } from "./cmd";
+import { exec, run } from "./cmd";
 import { translateWindowsPath } from "./wsl";
 
 export interface AppxPackage {
@@ -69,4 +69,12 @@ export async function isApplicationRunning(name: string): Promise<boolean> {
     return true;
   } catch {}
   return false;
+}
+
+export async function execAsWindowsAdmin(cmd: string, opts: { cwd?: string } = {}) {
+  return await exec(`powershell.exe Start-Process cmd.exe -Verb runAs -ArgumentList "/c", "${cmd}"`, opts);
+}
+
+export async function runAsWindowsAdmin(cmd: string, opts: { cwd?: string } = {}) {
+  return await run(`powershell.exe Start-Process cmd.exe -Verb runAs -ArgumentList "/c", "${cmd}"`, opts);
 }
