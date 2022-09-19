@@ -47,7 +47,6 @@ export class InstallerService {
         return m.filter((i) => isValidInstaller(i)) as Installer[];
       })
       .flat();
-    console.log("installers", installers);
     return installers;
   }
 

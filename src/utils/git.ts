@@ -20,7 +20,6 @@ export async function gitIsRepo(path: string) {
   }
   const git = simpleGit(path);
   const result = await git.checkIsRepo();
-  console.log("gitIsRepo", path, result);
   return result;
 }
 

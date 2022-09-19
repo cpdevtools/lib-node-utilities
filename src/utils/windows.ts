@@ -64,15 +64,9 @@ export async function removeRunOnceAfterRestart(id: string) {
 }
 
 export async function isApplicationRunning(name: string): Promise<boolean> {
-  console.log("isApplicationRunning", name);
   try {
-    console.log(`tasklist.exe /fi "ImageName eq ${name}" | find /I "${name}"`);
     await run(`tasklist.exe /fi "ImageName eq ${name}" | find /I "${name}"`);
-    console.log("found running app", name);
     return true;
-  } catch (e) {
-    console.log("err", e);
-  }
-  console.log("no running app", name);
+  } catch {}
   return false;
 }

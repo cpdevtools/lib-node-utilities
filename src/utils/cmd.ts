@@ -42,7 +42,6 @@ export class ChildProcessObservable extends Observable<ChildProcessEvent> {
     child.stdout?.on("data", (data: Buffer) => {
       try {
         const str = Buffer.from(data.filter((b) => !!b)).toString("ascii");
-        console.log(data);
         subscriber.next({
           type: "data",
           data: str,
@@ -108,32 +107,18 @@ export async function exec(cmd: string, { cwd }: { cwd?: string } = {}): Promise
   });
   const result = await child.complete;
   return result.code;
-  /*
-    return new Promise((res, rej) => {
-      try {
-        const child = spawn(cmd, { shell: true, stdio: "inherit", cwd, env: process.env });
-        child.on("exit", (code) => {
-          res(code ?? 0);
-        });
-      } catch (e) {
-        rej(e);
-      }
-    });
-    */
 }
 
 export async function run(cmd: string, { cwd }: { cwd?: string } = {}): Promise<string> {
   const child = new ChildProcessObservable(cmd, {
     shell: true,
-    stdio: "inherit",
+    stdio: "pipe",
     cwd,
     env: process.env,
   });
 
   const result = await lastValueFrom(child.dataComplete$);
   const comp = await child.complete;
-  console.log("comp", comp);
-  console.log("result", result);
   if (comp.code !== 0) {
     throw new Error(result.data);
   }

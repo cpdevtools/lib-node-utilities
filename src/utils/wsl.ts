@@ -25,24 +25,26 @@ export async function getWslVersion() {
       ?.trim();
 
     if (verStr) {
-      const p = verStr.split(".");
-      const l = p.pop();
-      return semVer.parse(`${p.join(".")}-${l}`, true);
+      const p = verStr.split(".").slice(0, 3);
+      return semVer.parse(`${p.join(".")}`, true);
     }
   } catch {}
   return null;
 }
 
 export async function getWslDefaultVersion() {
-  const verStr =
-    (await run(`wsl.exe --status`))
-      .split("\n")
-      .map((l) => l.trim())
-      .find((l) => l.includes("Default Version:"))
-      ?.split(":")?.[1]
-      ?.trim() ?? "0";
+  try {
+    const verStr =
+      (await run(`wsl.exe --status`))
+        .split("\n")
+        .map((l) => l.trim())
+        .find((l) => l.includes("Default Version:"))
+        ?.split(":")?.[1]
+        ?.trim() ?? "0";
 
-  return Number.isNaN(+verStr) ? 0 : +verStr;
+    return Number.isNaN(+verStr) ? 0 : +verStr;
+  } catch {}
+  return 0;
 }
 
 export async function isWslInstalled() {

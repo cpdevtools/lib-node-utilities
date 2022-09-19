@@ -53,10 +53,8 @@ export async function isDockerRunning() {
 
 export async function throwIfDockerNotRunning() {
   try {
-    console.log("docker info");
     await run("docker info");
   } catch {
-    console.log("failed.");
     throw new Error(`Docker is not running`);
   }
 }
@@ -111,7 +109,6 @@ export async function waitForDockerInit(isRestart: boolean = false) {
         }
         c++;
       }
-      console.log("try docker");
       await throwIfDockerNotRunning();
       if (c >= headerDelay) {
         if (isRestart) {
@@ -122,7 +119,6 @@ export async function waitForDockerInit(isRestart: boolean = false) {
       }
       c = -1;
     } catch {
-      console.log("sleep");
       await sleep(3750);
     }
   }
