@@ -16,18 +16,20 @@ export async function translateWslPath(path: string): Promise<string> {
 }
 
 export async function getWslVersion() {
-  const verStr = (await run(`wsl.exe --status`))
-    .split("\n")
-    .map((l) => l.trim())
-    .find((l) => l.includes("Kernel version:"))
-    ?.split(":")?.[1]
-    ?.trim();
+  try {
+    const verStr = ((await run(`wsl.exe --status`)) ?? "")
+      .split("\n")
+      .map((l) => l.trim())
+      .find((l) => l.includes("Kernel version:"))
+      ?.split(":")?.[1]
+      ?.trim();
 
-  if (verStr) {
-    const p = verStr.split(".");
-    const l = p.pop();
-    return semVer.parse(`${p.join(".")}-${l}`, true);
-  }
+    if (verStr) {
+      const p = verStr.split(".");
+      const l = p.pop();
+      return semVer.parse(`${p.join(".")}-${l}`, true);
+    }
+  } catch {}
   return null;
 }
 
