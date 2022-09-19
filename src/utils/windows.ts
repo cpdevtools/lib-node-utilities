@@ -1,6 +1,6 @@
 import os from "os";
 import semver from "semver";
-import { run } from "./cmd";
+import { exec, run } from "./cmd";
 import { translateWindowsPath } from "./wsl";
 
 export interface AppxPackage {
@@ -64,15 +64,17 @@ export async function removeRunOnceAfterRestart(id: string) {
 }
 
 export async function isApplicationRunning(name: string): Promise<boolean> {
-  console.log("isApplicationRunning", name);
   try {
-    console.log(`tasklist.exe /fi "ImageName eq ${name}" | find /I "${name}"`);
     await run(`tasklist.exe /fi "ImageName eq ${name}" | find /I "${name}"`);
-    console.log("found running app", name);
     return true;
-  } catch (e) {
-    console.log("err", e);
-  }
-  console.log("no running app", name);
+  } catch {}
   return false;
+}
+
+export async function execAsWindowsAdmin(cmd: string, opts: { cwd?: string } = {}) {
+  return await exec(`powershell.exe Start-Process cmd.exe -Verb runAs -ArgumentList "/c", "${cmd}"`, opts);
+}
+
+export async function runAsWindowsAdmin(cmd: string, opts: { cwd?: string } = {}) {
+  return await run(`powershell.exe Start-Process cmd.exe -Verb runAs -ArgumentList "/c", "${cmd}"`, opts);
 }
