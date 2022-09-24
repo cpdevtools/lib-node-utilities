@@ -69,8 +69,8 @@ export interface WingetInstallerInfo {
 }
 
 export async function wingetInfo(id: string): Promise<WingetInfo> {
-  const result = await run(`winget.exe show -e --id ${id}`);
-  const raw = yaml.parse(result.slice(result.indexOf("\n")).trim()) as WingetInfoRaw;
+  const result = (await run(`winget.exe show -e --id ${id}`)).replace(/.*?Found /, "Found:");
+  const raw = yaml.parse(result).trim() as WingetInfoRaw;
   return {
     id,
     author: raw.Author,
