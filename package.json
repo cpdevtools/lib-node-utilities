@@ -1,6 +1,6 @@
 {
   "name": "@cpdevtools/lib-node-utilities",
-  "version": "0.4.31",
+  "version": "0.4.32",
   "repository": "https://github.com/cpdevtools/lib-node-utilities",
   "typings": "./index.d.ts",
   "main": "./index.js",
@@ -26,11 +26,13 @@
     "npm:release:publish": "pnpm publish ./dist --access public --publish-branch 'release/latest'",
     "fix": "run-s fix:*",
     "fix:prettier": "prettier --write --ignore-unknown .",
-    "pre-commit": "echo pre-commit",
+    "pre-commit": "run-s pre-commit:*",
+    "pre-commit:tags": "git tag | xargs git tag -d",
     "watch:build": "tsc -p tsconfig.json -w",
     "reset-hard": "git clean -dfx && git reset --hard && pnpm i",
     "start": "run-p start:*",
-    "start:build": "pnpm run watch:build"
+    "start:build": "pnpm run watch:build",
+    "tags": "git tag | xargs git tag -d"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.0",
