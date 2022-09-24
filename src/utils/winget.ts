@@ -140,8 +140,3 @@ export async function updateOrInstallWinget(id: string) {
   }
   return await installWinget(id);
 }
-
-(async () => {
-  const info = await wingetInfo("Canonical.Ubuntu.2204");
-  console.log(info);
-})();
