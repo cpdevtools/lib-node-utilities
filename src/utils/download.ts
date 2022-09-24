@@ -60,22 +60,35 @@ function formatBytes(bytes: number, decimals: number = 2) {
 }
 
 function toFormattedEvent(evt: ProgressEvent): FormattedProgressEvent {
-  const eta = intervalToDuration({ start: 0, end: evt.eta * 1000 });
-  const duration = intervalToDuration({ start: 0, end: evt.duration * 1000 });
-  return {
-    type: "progress",
-    timeRemaining: formatDuration(eta, {
-      format: ["hours", "minutes", "seconds"],
-    }),
-    duration: formatDuration(duration, {
-      format: ["hours", "minutes", "seconds"],
-    }),
-    percent: `${Math.floor(evt.percent * 10000) / 100}%`,
-    time: evt.time,
-    size: formatBytes(evt.bytesTotal),
-    received: formatBytes(evt.bytesReceived),
-    rate: formatBytes(evt.bytesRate) + "/s",
-  };
+  try {
+    const eta = intervalToDuration({ start: 0, end: evt.eta * 1000 });
+    const duration = intervalToDuration({ start: 0, end: evt.duration * 1000 });
+    return {
+      type: "progress",
+      timeRemaining: formatDuration(eta, {
+        format: ["hours", "minutes", "seconds"],
+      }),
+      duration: formatDuration(duration, {
+        format: ["hours", "minutes", "seconds"],
+      }),
+      percent: `${Math.floor(evt.percent * 10000) / 100}%`,
+      time: evt.time,
+      size: formatBytes(evt.bytesTotal),
+      received: formatBytes(evt.bytesReceived),
+      rate: formatBytes(evt.bytesRate) + "/s",
+    };
+  } catch {
+    return {
+      type: "progress",
+      timeRemaining: "",
+      duration: "",
+      percent: "",
+      time: evt.time ?? new Date(),
+      rate: "",
+      received: "",
+      size: "",
+    };
+  }
 }
 
 export class FileDownload {

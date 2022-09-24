@@ -72,9 +72,9 @@ export async function isApplicationRunning(name: string): Promise<boolean> {
 }
 
 export async function execAsWindowsAdmin(cmd: string[], opts: { cwd?: string } = {}) {
-  return await exec(`powershell.exe Start-Process cmd.exe -Verb runAs -ArgumentList "/c", "${cmd.join(`", "`)}"`, opts);
+  return await exec(`powershell.exe Start-Process cmd.exe -Wait -Verb runAs -ArgumentList @('/c', '${cmd.join(`', '`)}')`, opts);
 }
 
 export async function runAsWindowsAdmin(cmd: string[], opts: { cwd?: string } = {}) {
-  return await run(`powershell.exe Start-Process cmd.exe -Verb runAs -ArgumentList "/c", "${cmd.join(`", "`)}"`, opts);
+  return await run(`powershell.exe Start-Process cmd.exe -Wait -Verb runAs -ArgumentList @('/c', '${cmd.join(`', '`)}')`, opts);
 }

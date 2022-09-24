@@ -1,6 +1,6 @@
 {
   "name": "@cpdevtools/lib-node-utilities",
-  "version": "0.4.32",
+  "version": "0.4.33",
   "repository": "https://github.com/cpdevtools/lib-node-utilities",
   "typings": "./index.d.ts",
   "main": "./index.js",
@@ -38,6 +38,7 @@
     "@types/cli-progress": "^3.11.0",
     "@types/inquirer": "^8.2.1",
     "@types/semver": "^7.3.12",
+    "@types/sha256-file": "^1.0.1",
     "@types/strip-color": "^0.1.0",
     "@types/yargs": "^17.0.10",
     "husky": "^8.0.0",
@@ -69,6 +70,7 @@
     "regedit": "^5.1.1",
     "rxjs": "^7.5.6",
     "semver": "^7.3.7",
+    "sha256-file": "^1.0.0",
     "simple-git": "^3.13.0",
     "strip-color": "^0.1.0",
     "ts-node": "^10.9.1",
