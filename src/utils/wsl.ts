@@ -1,3 +1,5 @@
+import { writeFile } from "fs/promises";
+import path from "path";
 import semVer from "semver";
 import { importChalk } from "./chalk";
 import { run } from "./cmd";
@@ -53,22 +55,45 @@ export async function isWslInstalled() {
 
 export async function installWSL() {
   if (isWindows) {
-    if (isWin10) {
-      console.info(`Enabling Windows Subsystem Linux (this could take a while)...`);
-      await execAsWindowsAdmin([
-        `dism.exe`,
-        `/online`,
-        `/enable-feature`,
-        `/featurename:Microsoft-Windows-Subsystem-Linux`,
-        `/all`,
-        `/norestart`,
-      ]);
-      console.info(`Enabling Virtual Machine Platform (this could also take a while)...`);
-      await execAsWindowsAdmin([`dism.exe`, `/online`, `/enable-feature`, `/featurename:VirtualMachinePlatform`, `/all`, `/norestart`]);
-    } else {
-      await execAsWindowsAdmin([`wsl`, `--install`]);
-    }
+    const p = path.join(process.env["temp"] ?? "", `installWSL.cmd`);
+
+    await writeFile(
+      p,
+      `
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+    `,
+      { encoding: "utf-8" }
+    );
+
+    await execAsWindowsAdmin([p]);
+    return true;
+    /*
+        console.info(`Enabling Windows Subsystem Linux (this could take a while)...`);
+        await execAsWindowsAdmin([
+          `dism.exe`,
+          `/online`,
+          `/enable-feature`,
+          `/featurename:Microsoft-Windows-Subsystem-Linux`,
+          `/all`,
+          `/norestart`,
+        ]);
+        console.info(`Enabling Virtual Machine Platform (this could also take a while)...`);
+        await execAsWindowsAdmin([`dism.exe`, `/online`, `/enable-feature`, `/featurename:VirtualMachinePlatform`, `/all`, `/norestart`]);
+        await execAsWindowsAdmsin([`wsl`, ` --set-default-version`, ` 2 > nul`, `2>&1`]);
+
+
+    */
+
+    /*
+        if (isWin10) {
+        } else {
+          await execAsWindowsAdmin([`wsl`, `--install`]);
+        }
+
+        */
   }
+  return false;
 }
 
 export async function updateWSL() {
@@ -89,7 +114,6 @@ export async function updateWSL() {
     console.info(chalk.gray(`Restarting wsl...`));
     await execAsWindowsAdmin([`wsl`, `--shutdown`]);
     console.info(chalk.gray(`Setting wsl 2 as default`));
-    await execAsWindowsAdmin([`wsl`, ` --set-default-version`, ` 2 > nul`, `2>&1`]);
   }
 }
 
@@ -106,6 +130,7 @@ export async function readWindowsEnv(name: string) {
 }
 
 function cleanValue(val: string) {
+  val = val.trim().split("\n").pop()?.trim() ?? "";
   if ((val.startsWith(`'`) && val.endsWith(`'`)) || (val.startsWith(`"`) && val.endsWith(`"`))) {
     return val.slice(1, -1);
   }
