@@ -102,5 +102,12 @@ export async function listWslDistributions() {
 }
 
 export async function readWindowsEnv(name: string) {
-  return (await run(`cmd.exe /c echo %${name}%`)).trim();
+  return cleanValue(await run(`cmd.exe /c echo %${name}%`)).trim();
+}
+
+function cleanValue(val: string) {
+  if ((val.startsWith(`'`) && val.endsWith(`'`)) || (val.startsWith(`"`) && val.endsWith(`"`))) {
+    return val.slice(1, -1);
+  }
+  return val;
 }
