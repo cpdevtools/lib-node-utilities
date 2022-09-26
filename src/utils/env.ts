@@ -16,11 +16,17 @@ export async function envVars(key?: string, value?: string | null): Promise<{ [k
     return env;
   } else if (value === undefined) {
     const env = (await envVars()) as { [key: string]: string };
-    return env[key];
+    return cleanValue(env[key]);
   } else if (value === null) {
     await deleteEnvVar(key);
   } else {
     await setEnvVar(key, value);
+  }
+}
+
+function cleanValue(val: string) {
+  if ((val.startsWith(`'`) && val.endsWith(`'`)) || (val.startsWith(`"`) && val.endsWith(`"`))) {
+    return val.slice(1, -1);
   }
 }
 
