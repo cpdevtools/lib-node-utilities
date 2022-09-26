@@ -120,7 +120,10 @@ export async function run(cmd: string, { cwd }: { cwd?: string } = {}): Promise<
   const result = await lastValueFrom(child.dataComplete$);
   const comp = await child.complete;
   if (comp.code !== 0) {
-    throw new Error(result.data);
+    throw {
+      code: comp.code,
+      data: result.data,
+    };
   }
   return result.data;
 }
