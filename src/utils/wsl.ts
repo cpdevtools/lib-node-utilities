@@ -104,7 +104,10 @@ export async function isWslDistroInstalled(name: string) {
 }
 
 export async function listWslDistributions() {
-  return (await run("wsl.exe --list")).split("\n").map((l) => l.trim());
+  try {
+    return (await run("wsl.exe --list")).split("\n").map((l) => l.trim());
+  } catch {}
+  return [];
 }
 
 export async function readWindowsEnv(name: string) {
