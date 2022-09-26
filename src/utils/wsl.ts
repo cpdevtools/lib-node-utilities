@@ -19,9 +19,14 @@ export async function translateWslPath(path: string): Promise<string> {
 
 export async function getWslVersion() {
   try {
-    const verStr = ((await run(`wsl.exe --status`)) ?? "")
-      .split("\n")
-      .map((l) => l.trim())
+    const result = ((await run(`wsl.exe --status`)) ?? "").split("\n").map((l) => l.trim());
+
+    const kernelError = !!result.find((l) => l.includes("kernel file is not found"));
+    if (kernelError) {
+      return semVer.parse("1.0.0");
+    }
+
+    const verStr = result
       .find((l) => l.includes("Kernel version:"))
       ?.split(":")?.[1]
       ?.trim();
@@ -65,55 +70,32 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
     `,
       { encoding: "utf-8" }
     );
-
-    await execAsWindowsAdmin([p]);
-    return true;
-    /*
-        console.info(`Enabling Windows Subsystem Linux (this could take a while)...`);
-        await execAsWindowsAdmin([
-          `dism.exe`,
-          `/online`,
-          `/enable-feature`,
-          `/featurename:Microsoft-Windows-Subsystem-Linux`,
-          `/all`,
-          `/norestart`,
-        ]);
-        console.info(`Enabling Virtual Machine Platform (this could also take a while)...`);
-        await execAsWindowsAdmin([`dism.exe`, `/online`, `/enable-feature`, `/featurename:VirtualMachinePlatform`, `/all`, `/norestart`]);
-        await execAsWindowsAdmsin([`wsl`, ` --set-default-version`, ` 2 > nul`, `2>&1`]);
-
-
-    */
-
-    /*
-        if (isWin10) {
-        } else {
-          await execAsWindowsAdmin([`wsl`, `--install`]);
-        }
-
-        */
   }
   return false;
+}
+
+export async function installWSLKernelUpdate() {
+  const p = path.join(process.env["temp"] ?? "", `installWSLKernelUpdate.cmd`);
+  await writeFile(
+    p,
+    `
+curl --ssl https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi > uwsl.msi && uwsl.msi
+wsl --update
+wsl --shutdown
+wsl --set-default-version 2
+`,
+    { encoding: "utf-8" }
+  );
+  await execAsWindowsAdmin([p]);
 }
 
 export async function updateWSL() {
   const chalk = await importChalk();
   if (isWindows) {
-    if (isWin10) {
-      console.info(chalk.gray(`Applying wsl update for windows 10...`));
-      await execAsWindowsAdmin([
-        `curl`,
-        `--ssl`,
-        `https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi`,
-        `> uwsl.msi`,
-        `&& uwsl.msi`,
-      ]);
-    }
     console.info(chalk.gray(`Updating wsl...`));
     await execAsWindowsAdmin([`wsl`, `--update`]);
     console.info(chalk.gray(`Restarting wsl...`));
     await execAsWindowsAdmin([`wsl`, `--shutdown`]);
-    console.info(chalk.gray(`Setting wsl 2 as default`));
   }
 }
 
