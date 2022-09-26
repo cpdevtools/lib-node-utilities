@@ -33,7 +33,6 @@ interface WingetInstallerInfoRaw {
   "Release Date": string;
 }
 interface WingetInfoRaw {
-  Title: string;
   Version: string;
   Publisher: string;
   "Publisher Url": string;
@@ -48,7 +47,6 @@ interface WingetInfoRaw {
 }
 export interface WingetInfo {
   id: string;
-  title: string;
   version: string;
   publisher: string;
   publisherUrl: string;
@@ -71,11 +69,11 @@ export interface WingetInstallerInfo {
 }
 
 export async function wingetInfo(id: string): Promise<WingetInfo> {
-  const result = "Name: " + (await run(`winget.exe show -e --id ${id}`)).split("Found ").slice(1).join("Found ");
-  const raw = yaml.parse(result).trim() as WingetInfoRaw;
+  let result = await run(`winget.exe show -e --id ${id}`);
+  result = result.slice(result.indexOf("Version:"));
+  const raw = yaml.parse(result) as WingetInfoRaw;
   return {
     id,
-    title: raw.Title,
     author: raw.Author,
     copyright: raw.Copyright,
     description: raw.Description,
