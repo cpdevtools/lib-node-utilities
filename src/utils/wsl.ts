@@ -70,6 +70,9 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
     `,
       { encoding: "utf-8" }
     );
+
+    await execAsWindowsAdmin([p]);
+    return true;
   }
   return false;
 }
