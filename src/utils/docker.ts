@@ -78,9 +78,10 @@ export async function killDockerDesktop() {
 }
 
 export async function waitForDockerInit(isRestart: boolean = false) {
+  await sleep(100);
   const chalk = await importChalk();
   let c = 0;
-  const headerDelay = isRestart ? 120 : 8;
+  const headerDelay = isRestart ? 8 : 4;
   while (c !== -1) {
     try {
       if (c < headerDelay) {

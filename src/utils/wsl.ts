@@ -108,13 +108,17 @@ export async function isWslDistroInstalled(name: string) {
 
 export async function listWslDistributions() {
   try {
-    return (await run("wsl.exe --list")).split("\n").map((l) => {
-      let r = l.trim();
-      if (r.toLowerCase().endsWith(" (default)")) {
-        r = r.slice(0, -10).trim();
-      }
-      return r;
-    });
+    return (await run("wsl.exe --list"))
+      .split("\n")
+      .slice(1)
+      .map((l) => {
+        let r = l.trim();
+        if (r.toLowerCase().endsWith(" (default)")) {
+          r = r.slice(0, -10).trim();
+        }
+        return r;
+      })
+      .filter((l) => !!l);
   } catch {}
   return [];
 }
