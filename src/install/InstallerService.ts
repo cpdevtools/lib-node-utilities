@@ -121,7 +121,7 @@ export class InstallerService {
 
   public async installOrUpdateById(idOrInstaller: string | PlatformInstaller): Promise<void> {
     const inst = typeof idOrInstaller === "string" ? await this.createInstallerInstance(idOrInstaller) : idOrInstaller;
-    const wasInstalled = inst?.isInstalled ?? false;
+    const wasInstalled = (await inst?.isInstalled) ?? false;
 
     if (wasInstalled) {
       if (implementsBeforeUpdate(inst)) {
@@ -160,7 +160,7 @@ export class InstallerService {
 
   public async uninstallById(idOrInstaller: string | PlatformInstaller): Promise<void> {
     const inst = typeof idOrInstaller === "string" ? await this.createInstallerInstance(idOrInstaller) : idOrInstaller;
-    const wasInstalled = inst?.isInstalled ?? false;
+    const wasInstalled = (await inst?.isInstalled) ?? false;
 
     if (wasInstalled) {
       if (implementsBeforeUninstall(inst)) {
@@ -179,7 +179,7 @@ export class InstallerService {
 
   public async updateById(idOrInstaller: string | PlatformInstaller): Promise<void> {
     const inst = typeof idOrInstaller === "string" ? await this.createInstallerInstance(idOrInstaller) : idOrInstaller;
-    const wasInstalled = inst?.isInstalled ?? false;
+    const wasInstalled = (await inst?.isInstalled) ?? false;
 
     if (wasInstalled) {
       if (implementsBeforeUpdate(inst)) {
