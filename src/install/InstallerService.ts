@@ -4,6 +4,7 @@ import { existsSync } from "fs";
 import Enumerable from "linq";
 import path from "path/posix";
 import { depGraphToArray } from "../utils/dep_graph";
+import { implementsAfterInstall, implementsBeforeInstall } from "./hooks";
 import { implementsAfterInstallOrUpdate } from "./hooks/AfterInstallOrUpdate";
 import { implementsAfterUninstall } from "./hooks/AfterUninstall.js";
 import { implementsAfterUpdate } from "./hooks/AfterUpdate.js";
@@ -120,38 +121,86 @@ export class InstallerService {
 
   public async installOrUpdateById(idOrInstaller: string | PlatformInstaller): Promise<void> {
     const inst = typeof idOrInstaller === "string" ? await this.createInstallerInstance(idOrInstaller) : idOrInstaller;
+    const wasInstalled = inst?.isInstalled ?? false;
+
+    if (wasInstalled) {
+      if (implementsBeforeUpdate(inst)) {
+        if ((await inst.beforeUpdate()) === false) {
+          return;
+        }
+      }
+    } else {
+      if (implementsBeforeInstall(inst)) {
+        if ((await inst.beforeInstall()) === false) {
+          return;
+        }
+      }
+    }
     if (implementsBeforeInstallOrUpdate(inst)) {
       if ((await inst.beforeInstallOrUpdate()) === false) {
         return;
       }
     }
+
     await inst?.installOrUpdate();
+
+    if (wasInstalled) {
+      if (implementsAfterUpdate(inst)) {
+        await inst.afterUpdate();
+      }
+    } else {
+      if (implementsAfterInstall(inst)) {
+        await inst.afterInstall();
+      }
+    }
     if (implementsAfterInstallOrUpdate(inst)) {
       await inst.afterInstallOrUpdate();
     }
   }
+
   public async uninstallById(idOrInstaller: string | PlatformInstaller): Promise<void> {
     const inst = typeof idOrInstaller === "string" ? await this.createInstallerInstance(idOrInstaller) : idOrInstaller;
-    if (implementsBeforeUninstall(inst)) {
-      if ((await inst.beforeUninstall()) === false) {
-        return;
+    const wasInstalled = inst?.isInstalled ?? false;
+
+    if (wasInstalled) {
+      if (implementsBeforeUninstall(inst)) {
+        if ((await inst.beforeUninstall()) === false) {
+          return;
+        }
       }
-    }
-    await inst?.uninstall();
-    if (implementsAfterUninstall(inst)) {
-      await inst.afterUninstall();
+
+      await inst?.uninstall();
+
+      if (implementsAfterUninstall(inst)) {
+        await inst.afterUninstall();
+      }
     }
   }
+
   public async updateById(idOrInstaller: string | PlatformInstaller): Promise<void> {
     const inst = typeof idOrInstaller === "string" ? await this.createInstallerInstance(idOrInstaller) : idOrInstaller;
-    if (implementsBeforeUpdate(inst)) {
-      if ((await inst.beforeUpdate()) === false) {
-        return;
+    const wasInstalled = inst?.isInstalled ?? false;
+
+    if (wasInstalled) {
+      if (implementsBeforeUpdate(inst)) {
+        if ((await inst.beforeUpdate()) === false) {
+          return;
+        }
       }
-    }
-    await inst?.update();
-    if (implementsAfterUpdate(inst)) {
-      await inst.afterUpdate();
+      if (implementsBeforeInstallOrUpdate(inst)) {
+        if ((await inst.beforeInstallOrUpdate()) === false) {
+          return;
+        }
+      }
+
+      await inst?.update();
+
+      if (implementsAfterUpdate(inst)) {
+        await inst.afterUpdate();
+      }
+      if (implementsAfterInstallOrUpdate(inst)) {
+        await inst.afterInstallOrUpdate();
+      }
     }
   }
 
