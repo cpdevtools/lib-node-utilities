@@ -4,6 +4,30 @@ import { join } from "path";
 import { run } from "./cmd";
 const homedir = os.homedir();
 
+/**
+ * Returns a map of all environment variables
+ * @returns A map of all environment variables
+ * @example
+ * const env = await envVars();
+ */
+export async function envVars(): Promise<{ [key: string]: string }>;
+/**
+ * Returns the value of the environment variable
+ * @param key The name of the environment variable
+ * @returns The value of the environment variable
+ * @example
+ * const value = await envVars("PATH");
+ * console.log(value);
+ */
+export async function envVars(key: string): Promise<string>;
+/**
+ * Sets the value of the environment variable
+ * @param key The name of the environment variable
+ * @param value The value of the environment variable
+ * @example
+ * await envVars("PATH", "/usr/bin");
+ */
+export async function envVars(key: string, value: string | null): Promise<undefined>;
 export async function envVars(key?: string, value?: string | null): Promise<{ [key: string]: string } | string | undefined> {
   if (typeof key !== "string") {
     const result = await run("env");

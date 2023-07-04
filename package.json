@@ -8,7 +8,7 @@
     "node": ">=14.16"
   },
   "scripts": {
-    "prepare": "run-s prepare:* && husky install",
+    "prepare": "run-s prepare:*",
     "prepare:husky": "husky install",
     "prepare:remove-tags": "git tag | xargs git tag -d",
     "prepare:build": "pnpm run build",
@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.0",
-    "@types/inquirer": "^8.2.1",
+    "@types/inquirer": "^9.0.3",
     "@types/semver": "^7.3.12",
     "@types/sha256-file": "^1.0.1",
     "@types/strip-color": "^0.1.0",
@@ -53,7 +53,8 @@
     "*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
-    "@inquirer/select": "0.0.26-alpha.0",
+    "@inquirer/core": "2.3.0",
+    "@inquirer/select": "^1.2.3",
     "@octokit/rest": "^19.0.3",
     "@types/node": "^18.6.1",
     "axios": "^0.27.2",
@@ -63,7 +64,7 @@
     "date-fns": "^2.29.1",
     "dependency-graph": "^0.11.0",
     "fast-glob": "^3.2.11",
-    "inquirer": "^9.1.1",
+    "inquirer": "^9.2.7",
     "is-docker": "^2.2.1",
     "is-wsl": "^2.2.0",
     "linq": "^3.2.4",
