@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "fs/promises";
 import os from "os";
 import { join } from "path";
-import { run } from "./cmd";
+import { run, exec } from "./cmd";
 const homedir = os.homedir();
 
 /**
@@ -11,6 +11,7 @@ const homedir = os.homedir();
  * const env = await envVars();
  */
 export async function envVars(): Promise<{ [key: string]: string }>;
+
 /**
  * Returns the value of the environment variable
  * @param key The name of the environment variable
@@ -20,6 +21,16 @@ export async function envVars(): Promise<{ [key: string]: string }>;
  * console.log(value);
  */
 export async function envVars(key: string): Promise<string>;
+
+/**
+ * Deletes the environment variable
+ * @param key The name of the environment variable
+ * @param value null
+ * @example
+ * await envVars("PATH", null);
+ */
+export async function envVars(key: string, value: null): Promise<undefined>;
+
 /**
  * Sets the value of the environment variable
  * @param key The name of the environment variable
@@ -27,7 +38,8 @@ export async function envVars(key: string): Promise<string>;
  * @example
  * await envVars("PATH", "/usr/bin");
  */
-export async function envVars(key: string, value: string | null): Promise<undefined>;
+export async function envVars(key: string, value: string): Promise<undefined>;
+
 export async function envVars(key?: string, value?: string | null): Promise<{ [key: string]: string } | string | undefined> {
   if (typeof key !== "string") {
     const result = await run("env");

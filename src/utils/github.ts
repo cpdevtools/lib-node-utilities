@@ -1,5 +1,6 @@
+import { ar, tr } from "date-fns/locale";
 import { importChalk } from "./chalk";
-import { exec } from "./cmd";
+import { exec, run } from "./cmd";
 
 export interface GithubRepoOptions {
   cwd?: string;
@@ -73,11 +74,57 @@ export interface GithubRepoCreateOptions extends GithubRepoOptions {
   template?: boolean;
 }
 
-export async function githubLogin(user: string, token: string) {
+export async function githubLogin(token: string): Promise<boolean>;
+/**
+ * @deprecated Use githubLogin(token: string) instead
+ */
+export async function githubLogin(user: string, token: string): Promise<boolean>;
+export async function githubLogin(...args: string[]): Promise<boolean> {
   const chalk = await importChalk();
-  console.info(`Attempting to log into github.com with user ${chalk.yellowBright(user)}`);
-  const result = await exec(`echo "${token}" | gh auth login --with-token`);
+  if (args.length === 2) {
+    console.info(`Attempting to log into github.com with user ${chalk.yellowBright(args[0])}`);
+    const result = await exec(`echo "${args[1]}" | gh auth login --with-token`);
+    return !result;
+  }
+  const result = await exec(`GITHUB_TOKEN="${args[0]}"; gh auth login -h github.com`);
+  console.log(result);
   return !result;
+}
+
+export interface GithubAuthStatus {
+  username: string;
+  protocol: string;
+  token: string;
+  scopes: string[];
+}
+
+export async function githubAuthStatus() {
+  console.info(`Checking Github Cli auth status`);
+
+  const result = await run(`gh auth status -t`);
+
+  const usernameRegExp = /Logged in to github\.com as ([\w\d]+)/i;
+  const usernameMatch = result.match(usernameRegExp);
+  const username = usernameMatch?.[1];
+
+  const protocolRegExp = /configured to use ([\w]+) protocol/i;
+  const protocolMatch = result.match(protocolRegExp);
+  const protocol = protocolMatch?.[1];
+
+  const tokenRegExp = /Token: ([\w\d\*]+)/i;
+  const tokenMatch = result.match(tokenRegExp);
+  const token = tokenMatch?.[1];
+
+  const scopesRegExp = /Token scopes: (.*?)$/im;
+  const scopesMatch = result.match(scopesRegExp);
+  const scopes = scopesMatch?.[1]?.split(",").map((s) => s.trim());
+
+  return {
+    username,
+    protocol,
+    token,
+    scopes,
+  } as GithubAuthStatus;
 }
 
 export async function configureGithubCli() {

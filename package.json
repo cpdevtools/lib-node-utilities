@@ -1,6 +1,6 @@
 {
   "name": "@cpdevtools/lib-node-utilities",
-  "version": "0.4.49",
+  "version": "0.4.50",
   "repository": "https://github.com/cpdevtools/lib-node-utilities",
   "typings": "./index.d.ts",
   "main": "./index.js",
@@ -37,6 +37,7 @@
   "devDependencies": {
     "@types/cli-progress": "^3.11.0",
     "@types/inquirer": "^9.0.3",
+    "@types/mute-stream": "^0.0.1",
     "@types/semver": "^7.3.12",
     "@types/sha256-file": "^1.0.1",
     "@types/strip-color": "^0.1.0",
