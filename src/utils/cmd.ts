@@ -127,3 +127,14 @@ export async function run(cmd: string, { cwd }: { cwd?: string } = {}): Promise<
   }
   return result.data;
 }
+
+export async function start(cmd: string, { cwd }: { cwd?: string } = {}) {
+  const child = spawn(cmd, {
+    shell: true,
+    detached: true,
+    stdio: "ignore",
+    cwd,
+    env: process.env,
+  });
+  child.unref();
+}
