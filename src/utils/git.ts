@@ -61,3 +61,15 @@ export async function gitSync(path: string) {
     await gitPush(path);
   }
 }
+
+export async function gitStatus(path: string) {
+  const git = simpleGit(path);
+  const result = await git.status();
+  return result;
+}
+
+export async function gitHasChanges(path: string) {
+  const git = simpleGit(path);
+  const result = await git.diffSummary();
+  return result.files.length > 0;
+}
