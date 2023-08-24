@@ -86,7 +86,6 @@ export async function githubLogin(...args: string[]): Promise<boolean> {
     return !result;
   }
   const result = await exec(`GITHUB_TOKEN="${args[0]}"; gh auth login -h github.com`);
-  console.log(result);
   return !result;
 }
 

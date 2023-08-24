@@ -18,7 +18,6 @@ export async function envVars(): Promise<{ [key: string]: string }>;
  * @returns The value of the environment variable
  * @example
  * const value = await envVars("PATH");
- * console.log(value);
  */
 export async function envVars(key: string): Promise<string>;
 
