@@ -1,4 +1,3 @@
-import { ar, tr } from "date-fns/locale";
 import { importChalk } from "./chalk";
 import { exec, run } from "./cmd";
 
@@ -87,7 +86,6 @@ export async function githubLogin(...args: string[]): Promise<boolean> {
     return !result;
   }
   const result = await exec(`GITHUB_TOKEN="${args[0]}"; gh auth login -h github.com`);
-  console.log(result);
   return !result;
 }
 
@@ -98,10 +96,8 @@ export interface GithubAuthStatus {
   scopes: string[];
 }
 
-export async function githubAuthStatus() {
-  console.info(`Checking Github Cli auth status`);
-
-  const result = await run(`gh auth status -t`);
+export async function githubAuthStatus(env?: NodeJS.ProcessEnv): Promise<GithubAuthStatus> {
+  const result = await run(`gh auth status -t`, { env });
 
   const usernameRegExp = /Logged in to github\.com as ([\w\d]+)/i;
   const usernameMatch = result.match(usernameRegExp);

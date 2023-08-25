@@ -98,23 +98,23 @@ export class ChildProcessObservable extends Observable<ChildProcessEvent> {
   }
 }
 
-export async function exec(cmd: string, { cwd }: { cwd?: string } = {}): Promise<number> {
+export async function exec(cmd: string, { cwd, env }: { cwd?: string; env?: NodeJS.ProcessEnv } = {}): Promise<number> {
   const child = new ChildProcessObservable(cmd, {
     shell: true,
     stdio: "inherit",
     cwd,
-    env: process.env,
+    env: env ?? process.env,
   });
   const result = await child.complete;
   return result.code;
 }
 
-export async function run(cmd: string, { cwd }: { cwd?: string } = {}): Promise<string> {
+export async function run(cmd: string, { cwd, env }: { cwd?: string; env?: NodeJS.ProcessEnv } = {}): Promise<string> {
   const child = new ChildProcessObservable(cmd, {
     shell: true,
     stdio: "pipe",
     cwd,
-    env: process.env,
+    env: env ?? process.env,
   });
 
   const result = await lastValueFrom(child.dataComplete$);
