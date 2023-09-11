@@ -43,7 +43,15 @@ export interface IPackageHandler {
     results: WorkspaceCallSuccess<number | undefined>[];
   }>;
 
+  listWorkspacePackages(): Promise<IPackageHandler[]>;
+  listWorkspaceNames(): Promise<(string | undefined)[]>;
+  listWorkspacePaths(): Promise<(string | undefined)[]>;
+
   readonly name?: string;
+  readonly path: string;
+  readonly fileName: string;
+  readonly fileType: string;
+  readonly version?: string;
   readonly dependencies: PackageJson.Dependency;
   readonly devDependencies: PackageJson.Dependency;
   readonly peerDependencies: PackageJson.Dependency;

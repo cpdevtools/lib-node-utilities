@@ -8,9 +8,9 @@ import { exec, importChalk } from "../../utils/index.js";
 import { IPackageHandler } from "../IPackageHandler";
 import { PackageManager } from "../PackageManager";
 import { RunScriptOptions } from "../RunScriptOptions";
-import { isWorkspaceCallError, WorkspaceCallError } from "../WorkspaceCallError";
+import { WorkspaceCallError, isWorkspaceCallError } from "../WorkspaceCallError";
 import { WorkspaceCallOptions } from "../WorkspaceCallOptions";
-import { isWorkspaceCallSuccess, WorkspaceCallSuccess } from "../WorkspaceCallSuccess";
+import { WorkspaceCallSuccess, isWorkspaceCallSuccess } from "../WorkspaceCallSuccess";
 import { WorkspaceSortingOptions } from "../WorkspaceSortingOptions";
 
 export abstract class Package implements IPackageHandler {
@@ -177,6 +177,10 @@ export abstract class Package implements IPackageHandler {
 
   public async listWorkspaceNames() {
     return (await this.workspaceQuery).select((p) => p.name).toArray();
+  }
+
+  public async listWorkspacePaths() {
+    return (await this.workspaceQuery).select((p) => p.path).toArray();
   }
 
   public async workspaceExecute(cmd: string, options: Partial<WorkspaceSortingOptions & WorkspaceCallOptions>) {
