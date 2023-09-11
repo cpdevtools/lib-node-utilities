@@ -18,18 +18,3 @@ export async function renderTemplateToFile(toFile: string, template: string, dat
 export async function renderTemplateFileToFile(toFile: string, templatePath: string, data: any): Promise<void> {
   await writeFile(toFile, await renderTemplateFile(templatePath, data), "utf-8");
 }
-
-export async function renderTemplateFileForEachProject(templatePath: string, data: any) {
-  const pm = await PackageManager.loadPackage(process.cwd() + "/package.json");
-  const r = await pm.workspaceCall(
-    async (pkg) => {
-      const result = await renderTemplateFile(templatePath, data);
-      return {
-        projectName: pkg.name,
-        result,
-      };
-    },
-    { parallel: true }
-  );
-  return r.results;
-}
