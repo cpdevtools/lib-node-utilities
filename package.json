@@ -1,6 +1,6 @@
 {
   "name": "@cpdevtools/lib-node-utilities",
-  "version": "0.4.53",
+  "version": "0.4.54",
   "repository": "https://github.com/cpdevtools/lib-node-utilities",
   "typings": "./index.d.ts",
   "main": "./index.js",
@@ -37,6 +37,7 @@
   "devDependencies": {
     "@types/cli-progress": "^3.11.0",
     "@types/inquirer": "^9.0.3",
+    "@types/mustache": "^4.2.2",
     "@types/mute-stream": "^0.0.1",
     "@types/semver": "^7.3.12",
     "@types/sha256-file": "^1.0.1",
@@ -69,6 +70,7 @@
     "is-docker": "^2.2.1",
     "is-wsl": "^2.2.0",
     "linq": "^3.2.4",
+    "mustache": "^4.2.0",
     "regedit": "^5.1.1",
     "rxjs": "^7.5.6",
     "semver": "^7.3.7",
