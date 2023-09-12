@@ -3,8 +3,9 @@ import Fs from "fs/promises";
 import Path from "path/posix";
 import { PackageJson } from "type-fest";
 import { readJsonFile } from "../utils";
-import { PACKAGE_TYPES } from "./impl/PACKAGE_TYPES";
 import { IPackageHandler } from "./IPackageHandler";
+import { PACKAGE_TYPES } from "./impl/PACKAGE_TYPES";
+import { Package } from "./impl/Package";
 
 export class PackageManager {
   public static async loadPackage(path: string) {
@@ -33,7 +34,9 @@ export class PackageManager {
       }
 
       if (data) {
-        return this.createPackageInstance(data, path, fileName);
+        const inst = this.createPackageInstance(data, path, fileName);
+        await (inst as Package).load();
+        return inst;
       }
     }
     throw new Error(`Could not find a package file at '${oPath}'`);

@@ -171,6 +171,8 @@ export abstract class Package implements IPackageHandler {
     return (this._workspaceQuery ??= this._workspaceQueryFactory());
   }
 
+  public async load() {}
+
   public async listWorkspacePackages() {
     return (await this.workspaceQuery).toArray();
   }
