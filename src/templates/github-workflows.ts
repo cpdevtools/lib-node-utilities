@@ -11,8 +11,13 @@ export async function renderGithubWorkflowTemplates() {
 
   const tplFiles = await glob("*.*.mustache", { onlyFiles: true, dot: true, cwd: "./.github/workflow-templates" });
   tplFiles.forEach(async (tplFile) => {
-    await renderTemplateFileToFile(`./.github/workflows/${parse(tplFile).name}`, `./.github/workflow-templates/${tplFile}`, {
-      projects: pkgs,
-    });
+    await renderTemplateFileToFile(
+      `./.github/workflows/${parse(tplFile).name}`,
+      `./.github/workflow-templates/${tplFile}`,
+      {
+        projects: pkgs,
+      },
+      ["<%", "%>"]
+    );
   });
 }
