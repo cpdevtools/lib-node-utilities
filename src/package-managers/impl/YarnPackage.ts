@@ -4,12 +4,8 @@ import { existsSync } from "fs";
 
 export class YarnPackage extends Package {
   public static async detect(data: PackageJson & { packageManager: string }, path: string, filename: string) {
-    if (data.packageManager.startsWith("yarn")) {
-      return true;
-    }
-    if (existsSync(`${path}/yarn.lock`)) {
-      return true;
-    }
+    if (data.packageManager?.startsWith("yarn")) return true;
+    if (existsSync(`${path}/yarn.lock`)) return true;
     return false;
   }
 
