@@ -4,8 +4,14 @@ import { readYamlFile } from "../../utils";
 import { Package } from "./Package";
 
 export class PnpmPackage extends Package {
-  public static async detect(data: PackageJson, path: string, filename: string) {
-    return true;
+  public static async detect(data: PackageJson & { packageManager: string }, path: string, filename: string) {
+    if (data.packageManager.startsWith("pnpm")) {
+      return true;
+    }
+    if (existsSync(`${path}/pnpm-lock.yaml`)) {
+      return true;
+    }
+    return false;
   }
 
   protected execPackageManager(cmd: string): Promise<number> {
