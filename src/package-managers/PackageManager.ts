@@ -34,7 +34,7 @@ export class PackageManager {
       }
 
       if (data) {
-        const inst = this.createPackageInstance(data, path, fileName);
+        const inst = await this.createPackageInstance(data, path, fileName);
         await (inst as Package).load();
         return inst;
       }
@@ -42,9 +42,9 @@ export class PackageManager {
     throw new Error(`Could not find a package file at '${oPath}'`);
   }
 
-  private static createPackageInstance(data: PackageJson, path: string, fileName: string): IPackageHandler {
+  private static async createPackageInstance(data: PackageJson, path: string, fileName: string): Promise<IPackageHandler> {
     for (const pType of PACKAGE_TYPES) {
-      if (pType.detect(data, path, fileName)) {
+      if (await pType.detect(data, path, fileName)) {
         return new pType(data, path, fileName);
       }
     }
