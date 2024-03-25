@@ -99,11 +99,11 @@ export interface GithubAuthStatus {
 export async function githubAuthStatus(env?: NodeJS.ProcessEnv): Promise<GithubAuthStatus> {
   const result = await run(`gh auth status -t`, { env });
 
-  const usernameRegExp = /Logged in to github\.com as ([\w\d]+)/i;
+  const usernameRegExp = /Logged in to github\.com account ([\w\d]+)/i;
   const usernameMatch = result.match(usernameRegExp);
   const username = usernameMatch?.[1];
 
-  const protocolRegExp = /configured to use ([\w]+) protocol/i;
+  const protocolRegExp = /Git operations protocol: ([\w]+)/i;
   const protocolMatch = result.match(protocolRegExp);
   const protocol = protocolMatch?.[1];
 
