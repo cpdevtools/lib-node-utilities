@@ -232,5 +232,5 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
 }
 
 (async () => {
-  await cmdCreateVersion(".", "0.3.1");
+  await cmdCreateVersion(".", "0.5.0");
 })();
