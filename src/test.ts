@@ -138,15 +138,26 @@ async function getRepoVersionInfo(path: string) {
   return RepoVersionInfo.load(path);
 }
 
-async function writePackageVersion(path: string, version: string) {
-  const pkg = await readJsonFile<PackageJson>(`${path}/package.json`);
-  pkg.version = version;
-  await writeJsonFile(`${path}/package.json`, pkg, 2);
-}
 async function commitPackageVersion(path: string, version: string) {
   const git = simpleGit(path);
-  await git.add("package.json");
-  await git.commit(`chore: updated package.json version to ${version}. [automated]`);
+  const r = await git.add("package.json");
+  console.log(r);
+  await git.commit(`chore: updated package.json version to ${version}. [automated]`, {});
+}
+
+async function writePackageVersion(path: string, version: string) {
+  const pkg = await readJsonFile<PackageJson>(`${path}/package.json`);
+  if (pkg.version !== version) {
+    pkg.version = version;
+    await writeJsonFile(`${path}/package.json`, pkg, 2);
+    await commitPackageVersion(path, version);
+  }
+}
+
+async function createReleaseBranch(path: string, version: string) {
+  const git = simpleGit(path);
+  // await git.add("package.json");
+  // await git.commit(`chore: updated package.json version to ${version}. [automated]`);
 }
 
 async function cmdCreateVersion(path: string, version: string, baseVersion: string = "auto") {
@@ -162,9 +173,8 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
   if (info.hasReleaseVersion(ver)) {
     throw new Error(`Version ${version} already exists`);
   }
-  console.log(info);
-  console.log(`Base version1: ${baseVersion}`, info.currentBranchVersion?.type, info.nextVersion);
-  if (baseVersion === "auto" && info.currentBranchVersion?.type === "next") {
+  console.log(`Base version1: ${baseVersion}`);
+  if (baseVersion === "auto" && info.currentBranchVersion?.type === "next" && ver.compare(info.nextVersion!) === 1) {
     baseVersion = info.nextVersion ?? "auto";
   }
   console.log(`Base version2: ${baseVersion}`);
@@ -196,26 +206,20 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
   if (!info.hasBranchVersion(base, "v")) {
     const newVer = `${ver.version}-dev.0`;
     // create working branch
-    if (info.currentBranchVersion?.type === "next") {
+    if (info.currentBranchVersion?.type === "next" && ver.compare(info.nextVersion!) === 1) {
       console.log(`Using main as working branch for version: ${ver.version}`);
       console.log(`Modifying package.json version to: '${newVer}`);
       await writePackageVersion(path, newVer);
-      console.log(`Committing changes`);
-      await commitPackageVersion(path, newVer);
     } else if (info.currentBranchVersion?.version.compare(base) === 0) {
       console.log(
         `Using '${info.currentBranchVersion.type}/${info.currentBranchVersion.version}' as working branch for version: ${ver.version}`
       );
       console.log(`Modifying package.json version to: '${newVer}`);
-      writePackageVersion(path, newVer);
-      console.log(`Committing changes`);
-      await commitPackageVersion(path, newVer);
+      await writePackageVersion(path, newVer);
     } else {
       console.log(`Creating working branch: v/${ver.version} from tag: v${base.version}`);
       console.log(`Modifying package.json version to: '${newVer}`);
-      writePackageVersion(path, newVer);
-      console.log(`Committing changes`);
-      await commitPackageVersion(path, newVer);
+      await writePackageVersion(path, newVer);
       console.log(`Publishing working branch to 'origin'`);
     }
   }
@@ -225,5 +229,5 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
   // const info = await getRepoVersionInfo(".");
   // console.log(info.toJSON());
 
-  await cmdCreateVersion(".", "0.4.64");
+  await cmdCreateVersion(".", "0.3.1");
 })();
