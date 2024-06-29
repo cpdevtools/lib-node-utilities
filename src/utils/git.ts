@@ -73,3 +73,21 @@ export async function gitHasChanges(path: string) {
   const result = await git.diffSummary();
   return result.files.length > 0;
 }
+
+export async function gitTags(path: string) {
+  const git = simpleGit(path);
+  const result = await git.tags();
+  return result;
+}
+export async function gitRemotes(path: string) {
+  const git = simpleGit(path);
+  const result = await git.getRemotes(true);
+  console.log(result);
+  return result;
+}
+export async function gitBranches(path: string) {
+  const git = simpleGit(path);
+  const result = await git.branch();
+  console.log(result);
+  return result;
+}
