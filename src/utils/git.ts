@@ -76,6 +76,7 @@ export async function gitHasChanges(path: string) {
 
 export async function gitTags(path: string) {
   const git = simpleGit(path);
+  await git.fetch();
   const result = await git.tags();
   return result;
 }

@@ -6,6 +6,7 @@ import { gitBranches, gitTags, readJsonFile, writeJsonFile } from "utils";
 
 async function getReleaseVersions(path: string) {
   const tags = await gitTags(path);
+  console.log(tags.all);
   return (
     tags.all
       .filter((tag) => tag.startsWith("v"))
@@ -153,6 +154,7 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
   if (!ver) {
     throw new Error(`Invalid version: ${version}`);
   }
+
   ver = parse(`${ver.major}.${ver.minor}.${ver.patch}`)!;
 
   const info = await RepoVersionInfo.load(path);
@@ -160,11 +162,12 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
   if (info.hasReleaseVersion(ver)) {
     throw new Error(`Version ${version} already exists`);
   }
-
+  console.log(info);
+  console.log(`Base version1: ${baseVersion}`, info.currentBranchVersion?.type, info.nextVersion);
   if (baseVersion === "auto" && info.currentBranchVersion?.type === "next") {
     baseVersion = info.nextVersion ?? "auto";
   }
-
+  console.log(`Base version2: ${baseVersion}`);
   if (baseVersion === "auto") {
     const idx = info.mainReleaseVersions.findIndex((v) => v?.compare(ver) === -1);
     if (idx === -1) {
@@ -173,6 +176,7 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
       baseVersion = info.mainReleaseVersions[idx]?.version ?? "0.0.0";
     }
   }
+  console.log(`Base version3: ${baseVersion}`);
 
   const base = parse(baseVersion)!;
   if (!info.hasReleaseVersion(base)) {
