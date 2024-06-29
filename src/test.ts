@@ -1,7 +1,8 @@
 import { existsSync } from "fs";
 import { SemVer, parse } from "semver";
+import simpleGit from "simple-git";
 import { PackageJson } from "type-fest";
-import { gitBranches, gitTags, readJsonFile } from "utils";
+import { gitBranches, gitTags, readJsonFile, writeJsonFile } from "utils";
 
 async function getReleaseVersions(path: string) {
   const tags = await gitTags(path);
@@ -136,11 +137,24 @@ async function getRepoVersionInfo(path: string) {
   return RepoVersionInfo.load(path);
 }
 
+async function writePackageVersion(path: string, version: string) {
+  const pkg = await readJsonFile<PackageJson>(`${path}/package.json`);
+  pkg.version = version;
+  await writeJsonFile(`${path}/package.json`, pkg, 2);
+}
+async function commitPackageVersion(path: string, version: string) {
+  const git = simpleGit(path);
+  await git.add("package.json");
+  await git.commit(`chore: updated package.json version to ${version}. [automated]`);
+}
+
 async function cmdCreateVersion(path: string, version: string, baseVersion: string = "auto") {
-  const ver = parse(version);
+  let ver = parse(version);
   if (!ver) {
     throw new Error(`Invalid version: ${version}`);
   }
+  ver = parse(`${ver.major}.${ver.minor}.${ver.patch}`)!;
+
   const info = await RepoVersionInfo.load(path);
 
   if (info.hasReleaseVersion(ver)) {
@@ -164,26 +178,42 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
   if (!info.hasReleaseVersion(base)) {
     throw new Error(`Base version '${baseVersion}' does not exist`);
   }
+
   if (ver.compare(base) !== 1) {
     throw new Error(`Version'${version}' must be greater than base version '${baseVersion}'`);
-  }
-
-  if (!info.hasBranchVersion(base, "v")) {
-    // create working branch
-    if (info.currentBranchVersion?.type === "next") {
-      console.log(`Creating working branch: v/${ver.version} from branch: main`);
-    } else if (info.currentBranchVersion?.version.compare(base) === 0) {
-      console.log(
-        `Creating working branch: v/${ver.version} from branch: ${info.currentBranchVersion.type}/${info.currentBranchVersion.version}`
-      );
-    } else {
-      console.log(`Creating working branch: v/${ver.version} from tag: v${base.version}`);
-    }
   }
 
   if (!info.hasBranchVersion(base, "release")) {
     // create release branch
     console.log(`Creating release branch: release/${ver.version} from tag: v${base.version}`);
+    console.log(`Publishing release branch to 'origin'`);
+  }
+
+  if (!info.hasBranchVersion(base, "v")) {
+    const newVer = `${ver.version}-dev.0`;
+    // create working branch
+    if (info.currentBranchVersion?.type === "next") {
+      console.log(`Using main as working branch for version: ${ver.version}`);
+      console.log(`Modifying package.json version to: '${newVer}`);
+      await writePackageVersion(path, newVer);
+      console.log(`Committing changes`);
+      await commitPackageVersion(path, newVer);
+    } else if (info.currentBranchVersion?.version.compare(base) === 0) {
+      console.log(
+        `Using '${info.currentBranchVersion.type}/${info.currentBranchVersion.version}' as working branch for version: ${ver.version}`
+      );
+      console.log(`Modifying package.json version to: '${newVer}`);
+      writePackageVersion(path, newVer);
+      console.log(`Committing changes`);
+      await commitPackageVersion(path, newVer);
+    } else {
+      console.log(`Creating working branch: v/${ver.version} from tag: v${base.version}`);
+      console.log(`Modifying package.json version to: '${newVer}`);
+      writePackageVersion(path, newVer);
+      console.log(`Committing changes`);
+      await commitPackageVersion(path, newVer);
+      console.log(`Publishing working branch to 'origin'`);
+    }
   }
 }
 
@@ -191,5 +221,5 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
   // const info = await getRepoVersionInfo(".");
   // console.log(info.toJSON());
 
-  await cmdCreateVersion(".", "1.0.0");
+  await cmdCreateVersion(".", "0.4.64");
 })();
