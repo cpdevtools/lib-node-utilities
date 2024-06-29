@@ -217,6 +217,7 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
       console.log(`Modifying package.json version to: '${newVer}`);
       await writePackageVersion(path, newVer);
       console.log(`Publishing working branch to 'origin'`);
+      await git.push("origin", `v/${ver.version}`);
     }
   } else {
     await git.checkout(`v/${ver.version}`);
@@ -229,6 +230,7 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
     console.log(`Creating release branch: release/${ver.version} from tag: v${base.version}`);
     await createReleaseBranch(path, ver.version, base.version);
     console.log(`Publishing release branch to 'origin'`);
+    await git.push("origin", `release/${ver.version}`);
   }
 
   await git.checkout(currentBranch);
