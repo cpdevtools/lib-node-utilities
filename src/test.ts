@@ -156,8 +156,8 @@ async function writePackageVersion(path: string, version: string) {
 
 async function createReleaseBranch(path: string, version: string) {
   const git = simpleGit(path);
-  // await git.add("package.json");
-  // await git.commit(`chore: updated package.json version to ${version}. [automated]`);
+  await git.fetch(["--all", "--tags", "--prune"]);
+  await git.checkout(`v/${version}`, ["-b", `release/${version}`]);
 }
 
 async function cmdCreateVersion(path: string, version: string, baseVersion: string = "auto") {
