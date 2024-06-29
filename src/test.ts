@@ -160,6 +160,12 @@ async function createReleaseBranch(path: string, version: string, baseVersion: s
   await git.checkout(`tags/v${baseVersion}`, ["-b", `release/${version}`]);
 }
 
+async function createWorkingBranch(path: string, version: string, baseVersion: string) {
+  const git = simpleGit(path);
+  await git.fetch(["--all", "--tags", "--prune"]);
+  await git.checkout(`tags/v${baseVersion}`, ["-b", `v/${version}`]);
+}
+
 async function cmdCreateVersion(path: string, version: string, baseVersion: string = "auto") {
   let ver = parse(version);
   if (!ver) {
@@ -197,12 +203,6 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
     throw new Error(`Version'${version}' must be greater than base version '${baseVersion}'`);
   }
 
-  if (!info.hasBranchVersion(base, "release")) {
-    // create release branch
-    console.log(`Creating release branch: release/${ver.version} from tag: v${base.version}`);
-    console.log(`Publishing release branch to 'origin'`);
-  }
-
   if (!info.hasBranchVersion(base, "v")) {
     const newVer = `${ver.version}-dev.0`;
     // create working branch
@@ -210,20 +210,26 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
       console.log(`Using main as working branch for version: ${ver.version}`);
       console.log(`Modifying package.json version to: '${newVer}`);
       await writePackageVersion(path, newVer);
-    } else if (info.currentBranchVersion?.version.compare(base) === 0) {
-      console.log(
-        `Using '${info.currentBranchVersion.type}/${info.currentBranchVersion.version}' as working branch for version: ${ver.version}`
-      );
-      console.log(`Modifying package.json version to: '${newVer}`);
-      await writePackageVersion(path, newVer);
     } else {
       console.log(`Creating working branch: v/${ver.version} from tag: v${base.version}`);
-      await createReleaseBranch(path, ver.version, base.version);
+      await createWorkingBranch(path, ver.version, base.version);
       console.log(`Modifying package.json version to: '${newVer}`);
       await writePackageVersion(path, newVer);
       console.log(`Publishing working branch to 'origin'`);
     }
   }
+
+  const currentBranch = (await gitBranches(path)).current;
+
+  if (!info.hasBranchVersion(ver, "release")) {
+    // create release branch
+    console.log(`Creating release branch: release/${ver.version} from tag: v${base.version}`);
+    await createReleaseBranch(path, ver.version, base.version);
+    console.log(`Publishing release branch to 'origin'`);
+  }
+
+  const git = simpleGit(path);
+  await git.checkout(currentBranch);
 }
 
 (async () => {
