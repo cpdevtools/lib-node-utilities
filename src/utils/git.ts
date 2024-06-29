@@ -82,12 +82,10 @@ export async function gitTags(path: string) {
 export async function gitRemotes(path: string) {
   const git = simpleGit(path);
   const result = await git.getRemotes(true);
-  console.log(result);
   return result;
 }
 export async function gitBranches(path: string) {
   const git = simpleGit(path);
   const result = await git.branch();
-  console.log(result);
   return result;
 }
