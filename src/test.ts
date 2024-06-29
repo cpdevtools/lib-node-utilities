@@ -154,10 +154,10 @@ async function writePackageVersion(path: string, version: string) {
   }
 }
 
-async function createReleaseBranch(path: string, version: string) {
+async function createReleaseBranch(path: string, version: string, baseVersion: string) {
   const git = simpleGit(path);
   await git.fetch(["--all", "--tags", "--prune"]);
-  await git.checkout(`v/${version}`, ["-b", `release/${version}`]);
+  await git.checkout(`tags/v${baseVersion}`, ["-b", `release/${version}`]);
 }
 
 async function cmdCreateVersion(path: string, version: string, baseVersion: string = "auto") {
@@ -218,6 +218,7 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
       await writePackageVersion(path, newVer);
     } else {
       console.log(`Creating working branch: v/${ver.version} from tag: v${base.version}`);
+      await createReleaseBranch(path, ver.version, base.version);
       console.log(`Modifying package.json version to: '${newVer}`);
       await writePackageVersion(path, newVer);
       console.log(`Publishing working branch to 'origin'`);
