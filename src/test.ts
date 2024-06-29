@@ -203,7 +203,7 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
     throw new Error(`Version'${version}' must be greater than base version '${baseVersion}'`);
   }
 
-  if (!info.hasBranchVersion(base, "v")) {
+  if (!info.hasBranchVersion(ver, "v")) {
     const newVer = `${ver.version}-dev.0`;
     // create working branch
     if (info.currentBranchVersion?.type === "next" && ver.compare(info.nextVersion!) === 1) {
