@@ -6,7 +6,6 @@ import { gitBranches, gitTags, readJsonFile, writeJsonFile } from "utils";
 
 async function getReleaseVersions(path: string) {
   const tags = await gitTags(path);
-  console.log(tags.all);
   return (
     tags.all
       .filter((tag) => tag.startsWith("v"))
@@ -156,14 +155,14 @@ async function writePackageVersion(path: string, version: string) {
 }
 
 async function createReleaseBranch(path: string, version: string, baseVersion: string) {
-  console.log(`Creating release branch: release/${version} from tag: v${baseVersion}`);
+  console.info(`Creating release branch: release/${version} from tag: v${baseVersion}`);
   const git = simpleGit(path);
   await git.fetch(["--all", "--tags", "--prune"]);
   await git.checkout(`tags/v${baseVersion}`, ["-b", `release/${version}`]);
 }
 
 async function createWorkingBranch(path: string, version: string, baseVersion: string) {
-  console.log(`Creating working branch: v/${version} from tag: v${baseVersion}`);
+  console.info(`Creating working branch: v/${version} from tag: v${baseVersion}`);
   const git = simpleGit(path);
   await git.fetch(["--all", "--tags", "--prune"]);
   await git.checkout(`tags/v${baseVersion}`, ["-b", `v/${version}`]);
@@ -182,11 +181,11 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
   if (info.hasReleaseVersion(ver)) {
     throw new Error(`Version ${version} already exists`);
   }
-  console.log(`Base version1: ${baseVersion}`);
+
   if (baseVersion === "auto" && info.currentBranchVersion?.type === "next" && ver.compare(info.nextVersion!) === 1) {
     baseVersion = info.nextVersion ?? "auto";
   }
-  console.log(`Base version2: ${baseVersion}`);
+
   if (baseVersion === "auto") {
     const idx = info.mainReleaseVersions.findIndex((v) => v?.compare(ver) === -1);
     if (idx === -1) {
@@ -195,8 +194,6 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
       baseVersion = info.mainReleaseVersions[idx]?.version ?? "0.0.0";
     }
   }
-  console.log(`Base version3: ${baseVersion}`);
-
   const base = parse(baseVersion)!;
   if (!info.hasReleaseVersion(base)) {
     throw new Error(`Base version '${baseVersion}' does not exist`);
@@ -211,12 +208,12 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
     const newVer = `${ver.version}-dev.0`;
     // create working branch
     if (info.currentBranchVersion?.type === "next" && ver.compare(info.nextVersion!) === 1) {
-      console.log(`Using main as working branch for version: ${ver.version}`);
+      console.info(`Using main as working branch for version: ${ver.version}`);
       await writePackageVersion(path, newVer);
     } else {
       await createWorkingBranch(path, ver.version, base.version);
       await writePackageVersion(path, newVer);
-      console.log(`Publishing working branch to 'origin'`);
+      console.info(`Publishing working branch to 'origin'`);
       await git.push("origin", `v/${ver.version}`);
     }
   } else {
@@ -227,7 +224,7 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
 
   if (!info.hasBranchVersion(ver, "release")) {
     await createReleaseBranch(path, ver.version, base.version);
-    console.log(`Publishing release branch to 'origin'`);
+    console.info(`Publishing release branch to 'origin'`);
     await git.push("origin", `release/${ver.version}`);
   }
 
