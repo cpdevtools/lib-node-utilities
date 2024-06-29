@@ -207,7 +207,7 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
   if (!info.hasBranchVersion(ver, "v")) {
     const newVer = `${ver.version}-dev.0`;
     // create working branch
-    if (info.currentBranchVersion?.type === "next" && ver.compare(info.nextVersion!) === 1) {
+    if (info.currentBranchVersion?.type === "next" && ver.compare(info.nextVersion!) === 1 && ver.compare(info.packageVersion!) === 1) {
       console.info(`Using main as working branch for version: ${ver.version}`);
       await writePackageVersion(path, newVer);
     } else {
@@ -232,5 +232,5 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
 }
 
 (async () => {
-  await cmdCreateVersion(".", "0.5.0");
+  await cmdCreateVersion(".", "0.4.7");
 })();
