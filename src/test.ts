@@ -202,6 +202,7 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
   if (ver.compare(base) !== 1) {
     throw new Error(`Version'${version}' must be greater than base version '${baseVersion}'`);
   }
+  const git = simpleGit(path);
 
   if (!info.hasBranchVersion(ver, "v")) {
     const newVer = `${ver.version}-dev.0`;
@@ -217,6 +218,8 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
       await writePackageVersion(path, newVer);
       console.log(`Publishing working branch to 'origin'`);
     }
+  } else {
+    await git.checkout(`v/${ver.version}`);
   }
 
   const currentBranch = (await gitBranches(path)).current;
@@ -228,7 +231,6 @@ async function cmdCreateVersion(path: string, version: string, baseVersion: stri
     console.log(`Publishing release branch to 'origin'`);
   }
 
-  const git = simpleGit(path);
   await git.checkout(currentBranch);
 }
 
