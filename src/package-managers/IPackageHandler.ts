@@ -48,6 +48,7 @@ export interface IPackageHandler {
   listWorkspacePaths(): Promise<(string | undefined)[]>;
 
   listWorkspacePackagesInTaskOrder(options: Partial<WorkspaceSortingOptions>): Promise<IPackageHandler[][]>;
+  hasScript(script: string): boolean;
 
   readonly name?: string;
   readonly path: string;
