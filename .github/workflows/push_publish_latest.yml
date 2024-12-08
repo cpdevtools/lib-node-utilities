@@ -6,7 +6,7 @@ on:
       - "release/latest"
 
 env:
-  NODE_VERSION: 16.x
+  NODE_VERSION: 20.x
 
 jobs:
   publish:
@@ -20,9 +20,9 @@ jobs:
         with:
           failInvalidCanCreate: true
 
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v2.4.1
         with:
-          version: 8.6.6
+          version: 9.14.2
           run_install: false
 
       - uses: actions/setup-node@v3
