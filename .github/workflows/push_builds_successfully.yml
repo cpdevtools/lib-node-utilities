@@ -8,7 +8,7 @@ on:
       - "!release/v*"
 
 env:
-  NODE_VERSION: 16.x
+  NODE_VERSION: 20.x
 
 jobs:
   check-library-build:
@@ -24,7 +24,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.2.2
         with:
-          version: 8.6.6
+          version: 9.14.2
           run_install: false
 
       - name: Get pnpm store directory

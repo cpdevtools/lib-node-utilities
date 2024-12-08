@@ -177,6 +177,11 @@ export abstract class Package implements IPackageHandler {
     return (await this.workspaceQuery).toArray();
   }
 
+  public async listWorkspacePackagesInTaskOrder(options: Partial<WorkspaceSortingOptions>) {
+    const opt = this._applyWorkspaceSortingOptionDefaults(options);
+    return await this._buildWorkspaceWalkingOrder(opt);
+  }
+
   public async listWorkspaceNames() {
     return (await this.workspaceQuery).select((p) => p.name).toArray();
   }
