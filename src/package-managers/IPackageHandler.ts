@@ -47,6 +47,8 @@ export interface IPackageHandler {
   listWorkspaceNames(): Promise<(string | undefined)[]>;
   listWorkspacePaths(): Promise<(string | undefined)[]>;
 
+  listWorkspacePackagesInTaskOrder(options: Partial<WorkspaceSortingOptions>): Promise<IPackageHandler[][]>;
+
   readonly name?: string;
   readonly path: string;
   readonly fileName: string;
