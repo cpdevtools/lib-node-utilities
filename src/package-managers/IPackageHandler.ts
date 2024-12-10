@@ -55,6 +55,7 @@ export interface IPackageHandler {
   readonly fileName: string;
   readonly fileType: string;
   readonly version?: string;
+  readonly packageJson: PackageJson;
   readonly dependencies: PackageJson.Dependency;
   readonly devDependencies: PackageJson.Dependency;
   readonly peerDependencies: PackageJson.Dependency;
