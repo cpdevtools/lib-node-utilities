@@ -36,36 +36,36 @@ export abstract class Package implements IPackageHandler {
     return Path.extname(this._file);
   }
 
-  protected get data() {
+  public get packageJson() {
     return this._data;
   }
 
   public get name() {
-    return this.data.name;
+    return this.packageJson.name;
   }
 
   public get version() {
-    return this.data.version;
+    return this.packageJson.version;
   }
 
   public get dependencies() {
-    this.data.dependencies ??= {};
-    return this.data.dependencies;
+    this.packageJson.dependencies ??= {};
+    return this.packageJson.dependencies;
   }
 
   public get devDependencies() {
-    this.data.devDependencies ??= {};
-    return this.data.devDependencies;
+    this.packageJson.devDependencies ??= {};
+    return this.packageJson.devDependencies;
   }
 
   public get peerDependencies() {
-    this.data.peerDependencies ??= {};
-    return this.data.peerDependencies;
+    this.packageJson.peerDependencies ??= {};
+    return this.packageJson.peerDependencies;
   }
 
   public get optionalDependencies() {
-    this.data.optionalDependencies ??= {};
-    return this.data.optionalDependencies;
+    this.packageJson.optionalDependencies ??= {};
+    return this.packageJson.optionalDependencies;
   }
 
   public get dependencyNames() {
@@ -93,8 +93,8 @@ export abstract class Package implements IPackageHandler {
   protected abstract execPackageManager(cmd: string): Promise<number>;
 
   public get scripts() {
-    this.data.scripts ??= {};
-    return this.data.scripts;
+    this.packageJson.scripts ??= {};
+    return this.packageJson.scripts;
   }
 
   public hasScript(scriptName: string) {
@@ -134,17 +134,17 @@ export abstract class Package implements IPackageHandler {
   }
 
   public get isWorkspace() {
-    return !!this.data.workspaces;
+    return !!this.packageJson.workspaces;
   }
 
   public get workspaces() {
-    return (this.data.workspaces ??= []);
+    return (this.packageJson.workspaces ??= []);
   }
 
   private async _workspaceQueryFactory() {
     const base = Enumerable.from(
       Array.isArray(this.workspaces)
-        ? (this.data.workspaces as string[])
+        ? (this.packageJson.workspaces as string[])
         : Array.isArray(this.workspaces.packages)
         ? this.workspaces.packages
         : []
