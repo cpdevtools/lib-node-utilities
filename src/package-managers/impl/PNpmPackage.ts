@@ -18,7 +18,7 @@ export class PnpmPackage extends Package {
   public override async load(): Promise<void> {
     if (this.isWorkspace) {
       const ws = await readYamlFile<any>("pnpm-workspace.yaml");
-      this.data.workspaces = ws.packages ?? [];
+      this.packageJson.workspaces = ws.packages ?? [];
     }
   }
 
