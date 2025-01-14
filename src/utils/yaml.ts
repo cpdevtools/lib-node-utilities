@@ -19,7 +19,7 @@ export function printAsYaml(data: any, opt?: { indent?: number; cliColor?: boole
 }
 
 export function toFormattedYaml(data: any, opt: { indent?: number; cliColor?: boolean } = {}) {
-  let yml = Yaml.stringify(data, { indent: opt.indent ?? 2 });
+  let yml = Yaml.stringify(data, { indent: opt.indent ?? 2, doubleQuotedAsJSON: true });
   if (opt.cliColor) {
     yml = highlight(yml, { language: "yaml" });
   }
