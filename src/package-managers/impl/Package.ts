@@ -12,7 +12,8 @@ import { WorkspaceCallError, isWorkspaceCallError } from "../WorkspaceCallError"
 import { WorkspaceCallOptions } from "../WorkspaceCallOptions";
 import { WorkspaceCallSuccess, isWorkspaceCallSuccess } from "../WorkspaceCallSuccess";
 import { WorkspaceSortingOptions } from "../WorkspaceSortingOptions";
-import minimatch from "minimatch";
+import { minimatch } from "minimatch";
+
 export abstract class Package implements IPackageHandler {
   private readonly _path: string;
   private readonly _file: string;
