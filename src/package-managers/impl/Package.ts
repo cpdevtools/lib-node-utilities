@@ -13,6 +13,7 @@ import { WorkspaceCallOptions } from "../WorkspaceCallOptions";
 import { WorkspaceCallSuccess, isWorkspaceCallSuccess } from "../WorkspaceCallSuccess";
 import { WorkspaceSortingOptions } from "../WorkspaceSortingOptions";
 import { minimatch } from "minimatch";
+import { join } from "path";
 
 export abstract class Package implements IPackageHandler {
   private readonly _path: string;
@@ -100,8 +101,12 @@ export abstract class Package implements IPackageHandler {
 
   public hasScript(scriptName: string) {
     const scriptNames = Object.keys(this.scripts).map((s) => s.replace(".", "/"));
+
     const find = scriptName.replace(".", "/");
-    return minimatch.match(scriptNames, scriptName).length > 0;
+    console.log(`find '${find}' in: \n '${scriptNames.join("\n")}'\n`);
+    const matches = minimatch.match(scriptNames, scriptName);
+    console.log(`matches: \n '${matches.join("\n")}'\n\n`);
+    return matches.length > 0;
   }
 
   public async runScript(script: string, options?: Partial<RunScriptOptions>): Promise<number | undefined> {
