@@ -12,7 +12,7 @@ import { WorkspaceCallError, isWorkspaceCallError } from "../WorkspaceCallError"
 import { WorkspaceCallOptions } from "../WorkspaceCallOptions";
 import { WorkspaceCallSuccess, isWorkspaceCallSuccess } from "../WorkspaceCallSuccess";
 import { WorkspaceSortingOptions } from "../WorkspaceSortingOptions";
-
+import minimatch from "minimatch";
 export abstract class Package implements IPackageHandler {
   private readonly _path: string;
   private readonly _file: string;
@@ -98,7 +98,9 @@ export abstract class Package implements IPackageHandler {
   }
 
   public hasScript(scriptName: string) {
-    return !!this.scripts[scriptName]?.trim();
+    const scriptNames = Object.keys(this.scripts).map((s) => s.replace(".", "/"));
+    const find = scriptName.replace(".", "/");
+    return minimatch.match(scriptNames, scriptName).length > 0;
   }
 
   public async runScript(script: string, options?: Partial<RunScriptOptions>): Promise<number | undefined> {
