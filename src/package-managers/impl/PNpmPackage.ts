@@ -6,7 +6,6 @@ import { Package } from "./Package";
 export class PnpmPackage extends Package {
   public static async detect(data: PackageJson & { packageManager: string }, path: string, filename: string) {
     if (data.packageManager?.startsWith("pnpm")) return true;
-    console.log("pnpm-lock.yaml", existsSync(`${path}/pnpm-lock.yaml`));
     if (existsSync(`${path}/pnpm-lock.yaml`)) return true;
     return false;
   }

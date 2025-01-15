@@ -5,7 +5,6 @@ import { existsSync } from "fs";
 export class YarnPackage extends Package {
   public static async detect(data: PackageJson & { packageManager: string }, path: string, filename: string) {
     if (data.packageManager?.startsWith("yarn")) return true;
-    console.log("yarn.lock", existsSync(`${path}/yarn.lock`));
     if (existsSync(`${path}/yarn.lock`)) return true;
     return false;
   }
