@@ -100,11 +100,9 @@ export abstract class Package implements IPackageHandler {
   }
 
   public hasScript(scriptName: string) {
-    const scriptNames = Object.keys(this.scripts).map((s) => s.replace(".", "/"));
-
-    const find = scriptName.replace(".", "/");
-    console.log(`find '${find}' in: \n '${scriptNames.join("\n")}'\n`);
-    const matches = minimatch.match(scriptNames, scriptName);
+    const scriptNames = Object.keys(this.scripts);
+    console.log(`find '${scriptName}' in: \n '${scriptNames.join("\n")}'\n`);
+    const matches = minimatch.match(scriptNames, scriptName, {});
     console.log(`matches: \n '${matches.join("\n")}'\n\n`);
     return matches.length > 0;
   }
