@@ -16,6 +16,7 @@
     "build": "run-s build:*",
     "build:ts": "tsc -p tsconfig.json",
     "build:copy-package": "ts-node .scripts/copy-package.ts",
+    "github.actions.pack": "run-s pack:*",
     "pack": "run-s pack:*",
     "pack:build": "pnpm run build",
     "pack:pack": "cd dist && mkdir ./pack && pnpm pack --pack-destination ./pack",
