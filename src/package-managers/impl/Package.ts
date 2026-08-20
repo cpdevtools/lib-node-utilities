@@ -353,7 +353,13 @@ export abstract class Package implements IPackageHandler {
 
   public async workspaceInstall(options: Partial<WorkspaceSortingOptions & RunScriptOptions>) {
     return this.workspaceCall(async (pkg) => {
-      return await pkg.install();
+      try {
+        console.info("Running install ", pkg.name);
+        return await pkg.install();
+      } catch (e) {
+        console.error("Failed to install package dependencies", e);
+        return -1;
+      }
     }, options);
   }
 }
