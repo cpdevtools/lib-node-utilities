@@ -14,15 +14,15 @@ jobs:
   check-library-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "${{ env.NODE_VERSION }}"
           registry-url: https://npm.pkg.github.com/
           always-auth: true
           scope: ${{ github.repository_owner }}
 
-      - uses: pnpm/action-setup@v2.4.1
+      - uses: pnpm/action-setup@v4
         with:
           version: 9.14.2
           run_install: false
@@ -30,9 +30,9 @@ jobs:
       - name: Get pnpm store directory
         id: pnpm-cache
         run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+          echo "pnpm_cache_dir=$(pnpm store path)" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         name: Setup pnpm cache
         with:
           path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
@@ -42,6 +42,8 @@ jobs:
 
       - name: Init
         run: pnpm i --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         run: pnpm run pack
